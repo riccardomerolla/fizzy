@@ -10,7 +10,7 @@ module Searchable
       after_update_commit  :update_in_search_index
       after_destroy_commit :remove_from_search_index
 
-      scope :search, ->(query) { joins("join #{using} idx on id = idx.rowid").where("idx.#{field} match ?", query) }
+      scope :search, ->(query) { joins("join #{using} idx on #{table_name}.id = idx.rowid").where("idx.#{field} match ?", query) }
     end
   end
 

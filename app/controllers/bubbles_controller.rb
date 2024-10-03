@@ -5,6 +5,11 @@ class BubblesController < ApplicationController
 
   def index
     @bubbles = @bucket.bubbles.not_popped.reverse_chronologically
+
+    if params[:filter].present?
+      @bubbles = @bubbles.mentioning(params[:filter])
+    end
+
     @most_active_bubbles = @bubbles.ordered_by_activity.limit(10)
 
     if params[:tag_id]
