@@ -101,8 +101,9 @@
     <% if @bubble.published? %>
       <%= render "bubbles/messages", bubble: @bubble %>
     <% else %>
-      <form>
-      <%= tag.house_md @bubble.draft_comment, name: "bubble[draft_comment]", form: "bubble_form", placeholder: new_comment_placeholder(@bubble) %>
+      <form data-controller="remote-auto-save" data-remote-auto-save-auto-save-outlet="#bubble_form">
+        <%= tag.house_md @bubble.draft_comment, name: "bubble[draft_comment]", form: "bubble_form", placeholder: new_comment_placeholder(@bubble),
+              data: { action: "house-md:change->remote-auto-save#change focusout->remote-auto-save#submit" } %>
       </form>
     <% end %>
   </div>
