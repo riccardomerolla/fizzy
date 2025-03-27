@@ -72,7 +72,7 @@
   background-color: color-mix(in srgb, var(--bubble-color) 4%, var(--color-bg));
   color: color-mix(in srgb, var(--bubble-color) 40%, var(--color-ink));
   max-inline-size: 75ch;
-  z-index: 0;
+  z-index: 1;
 
   .card__container & {
     inline-size: calc(100dvw - var(--actions-inline-inset) * 2 - var(--btn-size) * 2);
@@ -158,21 +158,15 @@
 }
 .card__container {
   --actions-block-inset: 1.5rem;
-  --actions-inline-inset: 1rem;
-  --padding-inline: var(--block-space);
-  --padding-block: var(--block-space) var(--block-space-double); 
+  --actions-inline-inset: 4rem;
+  --padding-inline: calc(var(--block-space-double) + var(--block-space));
+  --padding-block: var(--block-space-double) calc(var(--block-space-double) + var(--block-space-half)); 
 
   background-color: var(--color-container);
   border-radius: 0.2em;
   display: inline-flex;
   padding-block: var(--padding-block);
   padding-inline: var(--padding-inline);
-  
-  @media (min-width: 150ch) {
-    --actions-inline-inset: 4rem;
-    --padding-inline: calc(var(--block-space-double) + var(--block-space));
-    --padding-block: var(--block-space-double) calc(var(--block-space-double) + var(--block-space-half)); 
-  }
 }
 
 .card__container--pointing {
