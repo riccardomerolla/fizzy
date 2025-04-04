@@ -12,6 +12,10 @@
         <h1 class="card__title">
           <span class="card__title-link overflow-line-clamp"><%= bubble_title(bubble) %></span>
         </h1>
+
+        <%= link_to bucket_bubble_path(bubble.bucket, bubble), class: "card__link" do %>
+          <span class="for-screen-reader"><%= bubble_title(bubble) %></span>
+        <% end %>
       </div>
     </div>
 

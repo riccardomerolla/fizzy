@@ -25,9 +25,6 @@
             <% end %>
           <% end %>
         </h1>
-        <%= link_to bucket_bubble_path(bubble.bucket, bubble), class: "card__link" do %>
-          <span class="for-screen-reader"><%= bubble_title(bubble) %></span>
-        <% end %>
       </div>
 
       <%= turbo_frame_tag dom_id(bubble, :stage_picker), src: new_bucket_bubble_stage_picker_path(bubble.bucket, bubble) if editable_bubble_stage?(bubble) %>
