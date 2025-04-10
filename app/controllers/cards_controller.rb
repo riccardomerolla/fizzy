@@ -9,8 +9,8 @@ class CardsController < ApplicationController
   PAGE_SIZE = 50
 
   def index
-    @considering = page_and_filter_for @filter.with(engagement_status: "considering"), per_page: PAGE_SIZE
-    @doing = page_and_filter_for @filter.with(engagement_status: "doing"), per_page: PAGE_SIZE
+    @considering = page_and_filter_for @filter.with(engagement_status: "considering", indexed_by: "latest"), per_page: PAGE_SIZE
+    @doing = page_and_filter_for @filter.with(engagement_status: "doing", indexed_by: "latest"), per_page: PAGE_SIZE
     @closed = page_and_filter_for @filter.with(indexed_by: "closed"), per_page: PAGE_SIZE
   end
 

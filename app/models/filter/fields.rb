@@ -1,13 +1,13 @@
 module Filter::Fields
   extend ActiveSupport::Concern
 
-  INDEXES = %w[ most_discussed most_boosted newest oldest stalled ]
+  INDEXES = %w[ most_discussed most_boosted newest oldest latest stalled ]
 
   delegate :default_value?, to: :class
 
   class_methods do
     def default_values
-      { indexed_by: "most_active" }
+      { indexed_by: "latest" }
     end
 
     def default_value?(key, value)

@@ -1,19 +1,20 @@
-<div class="card card--mini shadow border flex gap position-relative txt-align-start full-width border-radius" style="view-transition-name: <%= dom_id(card, :ticket) %>;">
-  <%= avatar_image_tag card.creator, class: "avatar" %>
+<div class="card card--mini border flex flex-column gap position-relative txt-align-start full-width border-radius fill-white" style="--card-color: <%= card.color %>; view-transition-name: <%= dom_id(card, :ticket) %>;">
+  <header class="card__header flex align-center gap min-width">
+    <span class="card__collection txt-uppercase overflow-ellipsis txt-reversed">
+      <%= card.collection.name %>
+    </span>
+
+    <div class="overflow-ellipsis"><%= render "cards/display/mini/tags", card: card %></div>
+  </header>
 
   <div class="card__body flex flex-column gap-half full-width flex-item-grow min-width max-width">
-    <h3 class="card__title">
-      <%= card_title(card) %>
-    </h3>
-
-    <div class="txt-small overflow-ellipsis txt-uppercase"><%= "Added to #{card.collection.name} by #{card.creator.name}" %>
-      <%= local_datetime_tag(card.created_at, style: :daysago) %>
+    <div class="flex align-center gap min-width margin-block-end-half">
+      <h3 class="card__title overflow-ellipsis">
+        <%= card_title(card) %>
+      </h3>
     </div>
 
-    <div class="card__stuff flex align-center gap">
-      <%= render "cards/display/mini/assignees", card: card %>
-      <div class="overflow-ellipsis"><%= render "cards/display/mini/tags", card: card %></div>
-    </div>
+    <%= render "cards/display/mini/meta", card: card %>
   </div>
 
   <%= link_to collection_card_path(card.collection, card), class: "card__link" do %>

@@ -1,20 +1,12 @@
 <%= turbo_frame_tag @card, :assignment do %>
-  <div class="position-relative" data-controller="dialog" data-action="keydown.esc->dialog#close click@document->dialog#closeOnClickOutside">
-    <button class="btn <%= @card.creating? || @card.drafted? ? "fill-highlight" : "fill-transparent" %>" data-action="click->dialog#open:stop">
-      <%= icon_tag "add" %>
-      <span class="for-screen-reader">Assign</span>
-    </button>
-    <dialog class="popup panel flex-column align-start gap-half fill-white shadow" data-dialog-target="dialog">
-      <strong class="popup__title margin-block-start-half pad-inline-half txt-nowrap">Assign this to…</strong>
+  <strong class="popup__title margin-block-start-half pad-inline-half txt-nowrap">Assign this to…</strong>
 
-      <div class="flex flex-column full-width popup__list">
-        <% @card.collection.users.active.alphabetically.each do |user| %>
-            <%= button_to card_assignments_path(@card, params: { assignee_id: user.id }), method: :post, class: "btn popup__item full-width" do %>
-              <span class="overflow-ellipsis"><%= user.name %></span>
-              <%= icon_tag "check", size: 18, class: "checked flex-item-justify-end" if @card.assignees.include?(user) %>
-            <% end %>
+  <div class="flex flex-column full-width popup__list">
+    <% @card.collection.users.active.alphabetically.each do |user| %>
+        <%= button_to card_assignments_path(@card, params: { assignee_id: user.id }), method: :post, class: "btn popup__item full-width" do %>
+          <span class="overflow-ellipsis"><%= user.name %></span>
+          <%= icon_tag "check", size: 18, class: "checked flex-item-justify-end" if @card.assignees.include?(user) %>
         <% end %>
-      </div>
-    </dialog>
+    <% end %>
   </div>
 <% end %>

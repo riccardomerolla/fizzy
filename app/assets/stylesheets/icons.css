@@ -31,6 +31,7 @@
   .icon--caret-down { --svg: url("caret-down.svg "); }
   .icon--check { --svg: url("check.svg "); }
   .icon--close { --svg: url("close.svg "); }
+  .icon--comment { --svg: url("comment.svg "); }
   .icon--copy-paste { --svg: url("copy-paste.svg "); }
   .icon--crown { --svg: url("crown.svg "); }
   .icon--email { --svg: url("email.svg "); }
@@ -60,8 +61,6 @@
   .icon--rename { --svg: url("rename.svg "); }
   .icon--settings { --svg: url("settings.svg "); }
   .icon--share { --svg: url("share.svg "); }
-  .icon--sort-ascending { --svg: url("sort-ascending.svg "); }
-  .icon--sort-descending { --svg: url("sort-descending.svg "); }
   .icon--star { --svg: url("star.svg "); }
   .icon--tag { --svg: url("tag.svg "); }
   .icon--thumb-up { --svg: url("thumb-up.svg "); }

@@ -25,31 +25,26 @@
       --text-small: 1.1em;
 
       aspect-ratio: unset;
+      border: 1px solid var(--color-subtle) !important;
       line-height: 1.2;
-      padding: calc(var(--block-space) * 1.5) var(--block-space);
+      padding: 0;
       margin: var(--block-space) auto calc(var(--block-space) * 1.5);
+
+      @media (prefers-color-scheme: dark) {
+        border-color: var(--color-subtle-dark) !important;
+      }
 
       .card__title {
         margin-block-start: 0.1em;
         min-block-size: 0;
       }
 
-      .card__stuff {
-        .avatar {
-          block-size: 2em;
-          inline-size: 2em;
-          margin: 0;
-        }
-      }
-
       .card__body {
         padding-inline: 0;
-      }
 
-      .avatar {
-        block-size: 3em;
-        inline-size: 3em;
-        margin-block-start: -0.2em;
+        .card--mini & {
+          padding: 0 var(--inline-space-double) var(--block-space);
+        }
       }
 
       .card__tags {
@@ -91,6 +86,11 @@
       font-weight: bold;
     }
 
+    .avatar {
+      block-size: 2.75em;
+      inline-size: 2.75em;
+    }
+
     @media (prefers-color-scheme: dark) {
       --border-color: var(--color-subtle-dark);
       --border-size: 1px;
@@ -116,12 +116,12 @@
   }
 
   .card__actions-container {
-    --border-radius: 1em;
+    --border-radius: 6em;
 
     background-color: var(--color-bg);
     color: color-mix(in srgb, var(--card-color) 40%, var(--color-ink));
     margin-block: calc(var(--block-space) * -1.66) calc(var(--block-space) * 1.66);
-    padding: calc(var(--block-space) * 0.66) calc(var(--inline-space) * 1.5);
+    padding: calc(var(--block-space) * 0.75) calc(var(--block-space) * 0.66);
     position: relative;
     z-index: 0;
 
@@ -129,7 +129,7 @@
       z-index: 1;
     }
 
-    .btn:not(.popup__item, .btn--plain) {
+    .btn:not(.popup__item, .btn--plain, :has(input[type="radio"])) {
       --btn-background: var(--card-color);
       --btn-color: var(--color-ink-reversed);
     }
@@ -143,28 +143,26 @@
     .card__closure-message {
       color: var(--card-color);
     }
-  }
 
-  .card__actions-container--top {
-    min-inline-size: 36ch;
-    margin: calc(var(--block-space) * 1) auto calc(var(--block-space) * -0.33);
-    padding: 0.5em 0.75em;
+    &.card__actions-container--top {
+      margin: calc(var(--block-space) * 1) auto calc(var(--block-space) * -0.66);
+      min-inline-size: 30ch;
+  
+      #header:has(&) {
+        position: relative;
+        z-index: 1;
+      }
 
-    #header:has(&) {
-      position: relative;
-      z-index: 1;
-    }
+      .btn {
+        --btn-border-color: var(--card-color);
+        --btn-color: var(--card-color);
 
-    .switch__input:checked + .switch__btn {
-      background-color: var(--card-color) !important;
-    }
+        text-align: center;
 
-    strong {
-      flex: 1 0 42%;
-      text-align: end;
-
-      &:last-of-type {
-        text-align: start;
+        &:has(input:checked)  {
+          --btn-background: var(--card-color);
+          --btn-color: var(--color-ink-reversed);
+        }
       }
     }
   }
@@ -270,7 +268,7 @@
 
     &::after {
       aspect-ratio: var(--aspect-ratio);
-      background: var(--color-container);
+      background: color-mix(in srgb, var(--card-color) 33%, var(--color-bg));
       clip-path: polygon(50% 100%, 100% 0, 0 0);
       inline-size: var(--arrow-size);
       content: "";
@@ -397,7 +395,7 @@
     --border-size: 1px;
     --row-gap: 0.25em;
 
-    margin-inline-start: var(--inline-space-double);
+    margin-inline: var(--inline-space-double);
 
     strong {
       font-weight: 900;
@@ -405,6 +403,10 @@
 
     .separator {
       height: calc(2lh + 2ex);
+    }
+
+    .card--mini & {
+      margin-inline-start: 0;
     }
   }
 

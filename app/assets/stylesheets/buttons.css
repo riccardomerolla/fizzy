@@ -109,7 +109,7 @@
         display: none;
       }
     }
-
+    
     &:has(input:checked)  {
       --btn-background: var(--color-ink);
       --btn-color: var(--color-ink-reversed);
@@ -186,6 +186,34 @@
 
     .icon {
       animation: zoom-fade 300ms ease-out;
+    }
+  }
+
+  .btn__group {
+    .btn {
+      --btn-border-radius: 0;
+      inline-size: 100%;
+      justify-content: center;
+    }
+
+    form {
+      flex: 1 1 0%;
+    }
+
+    :first-of-type .btn {
+      border-top-left-radius: 2em;
+      border-bottom-left-radius: 2em;
+      flex: 1 0 50%;
+    }
+
+    :last-of-type .btn {
+      border-top-right-radius: 2em;
+      border-bottom-right-radius: 2em;
+      flex: 1 0 50%;
+    }
+
+    span {
+      inline-size: 100%;
     }
   }
 }

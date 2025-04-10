@@ -1,4 +1,8 @@
 @layer components {
+  .notification {
+    position: relative;
+  }
+
   .notification-tray {
     inset: auto var(--inline-space) var(--block-space-half) auto;
 
@@ -48,7 +52,7 @@
     .notificiations-list--read & {
       --border-color: var(--color-subtle);
 
-      box-shadow: none;
+      box-shadow: none !important;
     }
   }
 
