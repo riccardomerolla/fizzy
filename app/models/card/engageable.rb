@@ -7,7 +7,7 @@ module Card::Engageable
     has_one :engagement, dependent: :destroy, class_name: "Card::Engagement"
 
     scope :doing, -> { published.active.joins(:engagement) }
-    scope :considering, -> { published.active.where.missing(:engagement) }
+    scope :considering, -> { published_or_drafted_by(Current.user).active.where.missing(:engagement) }
 
     scope :stagnated, -> { doing.where(last_active_at: ..STAGNATED_AFTER.ago) }
   end
