@@ -11,6 +11,6 @@ module CardScoped
     end
 
     def set_collection
-      @collection = Current.user.collections.find(@card.collection_id)
+      @collection = @card.collection
     end
 end

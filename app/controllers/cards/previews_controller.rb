@@ -1,5 +1,6 @@
 class Cards::PreviewsController < ApplicationController
   include FilterScoped
+
   before_action :set_filter, only: :index
 
   def index

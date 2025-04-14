@@ -1,3 +1,22 @@
 class Closure::Reason < ApplicationRecord
-  belongs_to :account
+  DEFAULT_LABELS = [
+    "Completed",
+    "Duplicate",
+    "Maybe later",
+    "Working as intended"
+  ]
+
+  FALLBACK_LABEL = "Done"
+
+  class << self
+    def labels
+      pluck(:label).presence || [ FALLBACK_LABEL ]
+    end
+
+    def create_defaults
+      DEFAULT_LABELS.each do |label|
+        create! label: label
+      end
+    end
+  end
 end

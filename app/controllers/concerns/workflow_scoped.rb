@@ -7,6 +7,6 @@ module WorkflowScoped
 
   private
     def set_workflow
-      @workflow = Current.account.workflows.find params[:workflow_id]
+      @workflow = Workflow.find(params[:workflow_id])
     end
 end

@@ -13,13 +13,6 @@ logo_assignment_jz:
   particulars: <%= { assignee_ids: [ ActiveRecord::FixtureSet.identify(:jz) ] }.to_json %>
   created_at: <%= 1.week.ago + 1.hour %>
 
-logo_boost_dhh:
-  creator: david
-  card: logo
-  action: boosted
-  summary: logo_initial_activity
-  created_at: <%= 1.week.ago + 2.hours %>
-
 logo_assignment_km:
   creator: david
   card: logo
@@ -27,34 +20,6 @@ logo_assignment_km:
   summary: logo_second_activity
   particulars: <%= { assignee_ids: [ ActiveRecord::FixtureSet.identify(:kevin) ] }.to_json %>
   created_at: <%= 1.day.ago %>
-
-logo_boost_km1:
-  creator: kevin
-  card: logo
-  action: boosted
-  summary: logo_second_activity
-  created_at: <%= 1.day.ago + 1.hour %>
-
-logo_boost_km2:
-  creator: kevin
-  card: logo
-  action: boosted
-  summary: logo_second_activity
-  created_at: <%= 1.day.ago + 2.hours %>
-
-logo_boost_jz1:
-  creator: jz
-  card: logo
-  action: boosted
-  summary: logo_second_activity
-  created_at: <%= 1.day.ago + 3.hours %>
-
-logo_boost_jz2:
-  creator: jz
-  card: logo
-  action: boosted
-  summary: logo_third_activity
-  created_at: <%= 1.hour.ago %>
 
 layout_published:
   creator: david

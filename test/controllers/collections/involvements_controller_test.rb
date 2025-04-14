@@ -10,7 +10,7 @@ class Collections::InvolvementsControllerTest < ActionDispatch::IntegrationTest
     collection.access_for(users(:kevin)).access_only!
 
     assert_changes -> { collection.access_for(users(:kevin)).involvement }, from: "access_only", to: "watching" do
-      put collection_involvement_url(collection, involvement: "watching")
+      put collection_involvement_path(collection, involvement: "watching")
     end
 
     assert_response :success

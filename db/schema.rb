@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_04_10_141409) do
+ActiveRecord::Schema[8.1].define(version: 2025_04_12_170620) do
   create_table "accesses", force: :cascade do |t|
     t.integer "collection_id", null: false
     t.datetime "created_at", null: false
@@ -113,9 +113,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_04_10_141409) do
     t.float "activity_score", default: 0.0, null: false
     t.datetime "activity_score_at"
     t.float "activity_score_order", default: 0.0, null: false
-    t.integer "boosts_count", default: 0, null: false
     t.integer "collection_id", null: false
-    t.integer "comments_count", default: 0, null: false
     t.datetime "created_at", null: false
     t.integer "creator_id", null: false
     t.date "due_on"
@@ -131,11 +129,9 @@ ActiveRecord::Schema[8.1].define(version: 2025_04_10_141409) do
   end
 
   create_table "closure_reasons", force: :cascade do |t|
-    t.integer "account_id"
     t.datetime "created_at", null: false
     t.string "label"
     t.datetime "updated_at", null: false
-    t.index ["account_id"], name: "index_closure_reasons_on_account_id"
   end
 
   create_table "closures", force: :cascade do |t|
@@ -150,14 +146,12 @@ ActiveRecord::Schema[8.1].define(version: 2025_04_10_141409) do
   end
 
   create_table "collections", force: :cascade do |t|
-    t.integer "account_id", null: false
     t.boolean "all_access", default: false, null: false
     t.datetime "created_at", null: false
     t.integer "creator_id", null: false
     t.string "name", null: false
     t.datetime "updated_at", null: false
     t.integer "workflow_id"
-    t.index ["account_id"], name: "index_collections_on_account_id"
     t.index ["creator_id"], name: "index_collections_on_creator_id"
     t.index ["workflow_id"], name: "index_collections_on_workflow_id"
   end
@@ -289,16 +283,12 @@ ActiveRecord::Schema[8.1].define(version: 2025_04_10_141409) do
   end
 
   create_table "tags", force: :cascade do |t|
-    t.integer "account_id", null: false
     t.datetime "created_at", null: false
     t.string "title"
     t.datetime "updated_at", null: false
-    t.index ["account_id", "title"], name: "index_tags_on_account_id_and_title", unique: true
-    t.index ["account_id"], name: "index_tags_on_account_id"
   end
 
   create_table "users", force: :cascade do |t|
-    t.integer "account_id", null: false
     t.boolean "active", default: true, null: false
     t.datetime "created_at", null: false
     t.string "email_address"
@@ -306,7 +296,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_04_10_141409) do
     t.string "password_digest"
     t.string "role", default: "member", null: false
     t.datetime "updated_at", null: false
-    t.index ["account_id"], name: "index_users_on_account_id"
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
     t.index ["role"], name: "index_users_on_role"
   end
@@ -331,11 +320,9 @@ ActiveRecord::Schema[8.1].define(version: 2025_04_10_141409) do
   end
 
   create_table "workflows", force: :cascade do |t|
-    t.integer "account_id", null: false
     t.datetime "created_at", null: false
     t.string "name", null: false
     t.datetime "updated_at", null: false
-    t.index ["account_id"], name: "index_workflows_on_account_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
@@ -356,11 +343,9 @@ ActiveRecord::Schema[8.1].define(version: 2025_04_10_141409) do
   add_foreign_key "sessions", "users"
   add_foreign_key "taggings", "cards"
   add_foreign_key "taggings", "tags"
-  add_foreign_key "users", "accounts"
   add_foreign_key "watches", "cards"
   add_foreign_key "watches", "users"
   add_foreign_key "workflow_stages", "workflows"
-  add_foreign_key "workflows", "accounts"
 
   # Virtual tables defined in this database.
   # Note that virtual tables may not work with other database engines. Be careful if changing database.

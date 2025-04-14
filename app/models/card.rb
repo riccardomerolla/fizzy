@@ -1,5 +1,5 @@
 class Card < ApplicationRecord
-  include Assignable, Boostable, Colored, Commentable, Engageable, Eventable, Golden,
+  include Assignable, Colored, DraftCommenting, Engageable, Eventable, Golden,
     Messages, Notifiable, Pinnable, Closeable, Scorable, Searchable, Staged,
     Statuses, Taggable, Watchable
 
@@ -22,8 +22,6 @@ class Card < ApplicationRecord
   scope :indexed_by, ->(index) do
     case index
     when "most_active"    then ordered_by_activity
-    when "most_discussed" then ordered_by_comments
-    when "most_boosted"   then ordered_by_boosts
     when "newest"         then reverse_chronologically
     when "oldest"         then chronologically
     when "latest"         then latest
@@ -37,6 +35,10 @@ class Card < ApplicationRecord
     when "considering"    then considering
     when "doing"          then doing.with_golden_first
     end
+  end
+
+  def title=(new_title)
+    self[:title] = new_title.presence || "Untitled"
   end
 
   def cache_key

@@ -13,14 +13,6 @@ class CardTest < ActiveSupport::TestCase
     assert_equal "Agreed.", cards(:logo).messages.comments.last.messageable.body.to_plain_text.chomp
   end
 
-  test "boosting" do
-    assert_changes -> { cards(:logo).activity_score } do
-      assert_difference -> { cards(:logo).boosts_count }, +1 do
-        cards(:logo).boost!(cards(:logo).boosts_count+ 1)
-      end
-    end
-  end
-
   test "assignment states" do
     assert cards(:logo).assigned_to?(users(:kevin))
     assert_not cards(:logo).assigned_to?(users(:david))
@@ -62,7 +54,7 @@ class CardTest < ActiveSupport::TestCase
     end
     assert cards(:logo).tagged_with?(tags(:web))
 
-    assert_difference %w[ cards(:logo).taggings.count accounts("37s").tags.count ], +1 do
+    assert_difference %w[ cards(:logo).taggings.count Tag.count ], +1 do
       cards(:logo).toggle_tag_with "prioritized"
     end
     assert_equal "prioritized", cards(:logo).taggings.last.tag.title
@@ -72,15 +64,6 @@ class CardTest < ActiveSupport::TestCase
     card = collections(:writebook).cards.create! title: "Insufficient haggis", creator: users(:kevin)
 
     assert_includes Card.search("haggis"), card
-  end
-
-  test "ordering by comments" do
-    assert_equal cards(:logo, :layout, :shipping, :text), Card.ordered_by_comments
-  end
-
-  test "ordering by boosts" do
-    cards(:layout).update! boosts_count: 1_000
-    assert_equal cards(:layout, :logo, :shipping, :text), Card.ordered_by_boosts
   end
 
   test "closed" do
@@ -104,7 +87,7 @@ class CardTest < ActiveSupport::TestCase
   end
 
   test "in collection" do
-    new_collection = accounts("37s").collections.create! name: "New Collection", creator: users(:david)
+    new_collection = Collection.create! name: "New Collection", creator: users(:david)
     assert_equal cards(:logo, :shipping, :layout, :text), Card.in_collection(collections(:writebook))
     assert_empty Card.in_collection(new_collection)
   end

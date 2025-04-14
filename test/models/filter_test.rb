@@ -3,7 +3,7 @@ require "test_helper"
 class FilterTest < ActiveSupport::TestCase
   test "cards" do
     Current.set session: sessions(:david) do
-      @new_collection = accounts("37s").collections.create! name: "Inaccessible Collection"
+      @new_collection = Collection.create! name: "Inaccessible Collection"
       @new_card = @new_collection.cards.create!
       @new_card.update!(stage: workflow_stages(:qa_triage))
 
@@ -13,9 +13,6 @@ class FilterTest < ActiveSupport::TestCase
     end
 
     assert_not_includes users(:kevin).filters.new.cards, @new_card
-
-    filter = users(:david).filters.new indexed_by: "most_discussed", assignee_ids: [ users(:jz).id ], tag_ids: [ tags(:mobile).id ]
-    assert_equal [ cards(:layout) ], filter.cards
 
     filter = users(:david).filters.new creator_ids: [ users(:david).id ], tag_ids: [ tags(:mobile).id ]
     assert_equal [ cards(:layout) ], filter.cards
@@ -104,32 +101,16 @@ class FilterTest < ActiveSupport::TestCase
   end
 
   test "summary" do
-    assert_equal "Most discussed, tagged #mobile, and assigned to JZ ", filters(:jz_assignments).summary
+    assert_equal "Newest, tagged #mobile, and assigned to JZ ", filters(:jz_assignments).summary
 
     filters(:jz_assignments).update!(stages: workflow_stages(:qa_triage, :qa_in_progress))
-    assert_equal "Most discussed, tagged #mobile, assigned to JZ, and staged in Triage or In progress ", filters(:jz_assignments).summary
+    assert_equal "Newest, tagged #mobile, assigned to JZ, and staged in Triage or In progress ", filters(:jz_assignments).summary
 
     filters(:jz_assignments).update!(stages: [], assignees: [], tags: [], collections: [ collections(:writebook) ])
-    assert_equal "Most discussed in Writebook", filters(:jz_assignments).summary
+    assert_equal "Newest in Writebook", filters(:jz_assignments).summary
 
     filters(:jz_assignments).update!(indexed_by: "stalled")
     assert_equal "Stalled in Writebook", filters(:jz_assignments).summary
-  end
-
-  test "params without a key-value pair" do
-    filter = users(:david).filters.new indexed_by: "most_discussed", assignee_ids: [ users(:jz).id, users(:kevin).id ]
-
-    expected = { indexed_by: "most_discussed", assignee_ids: [ users(:kevin).id ] }
-    assert_equal expected, filter.as_params_without(:assignee_ids, users(:jz).id).to_h
-
-    expected = { assignee_ids: [ users(:jz).id, users(:kevin).id ] }
-    assert_equal expected, filter.as_params_without(:indexed_by, "most_discussed").to_h
-
-    expected = { indexed_by: "most_discussed", assignee_ids: [ users(:jz).id, users(:kevin).id ] }
-    assert_equal expected, filter.as_params_without(:indexed_by, "most_active").to_h
-
-    expected = { indexed_by: "most_discussed", assignee_ids: [ users(:jz).id, users(:kevin).id ] }
-    assert_equal expected, filter.as_params_without(:assignee_ids, users(:david).id).to_h
   end
 
   test "get a clone with some changed params" do

@@ -2,10 +2,11 @@ Rails.application.routes.draw do
   resource :first_run
 
   resource :account do
-    scope module: :accounts do
-      resource :join_code
-      resources :users
-    end
+    resource :join_code, module: :accounts
+  end
+
+  resources :users do
+    resource :role, module: :users
   end
 
   resources :collections do
@@ -35,7 +36,6 @@ Rails.application.routes.draw do
       resource :goldness
 
       resources :assignments
-      resources :boosts
       resources :stagings
       resources :taggings
 

@@ -78,7 +78,7 @@
           <% end %>
         </menu>
 
-        <% if workflow = Current.account.workflows.first %>
+        <% if workflow = Workflow.first %>
           <menu class="filter__menu">
             <li class="filter__label"><strong>In Stage</strong></li>
             <% workflow.stages.each do |stage| %>
@@ -93,7 +93,7 @@
           </menu>
         <% end %>
 
-        <% if (tags = Current.account.tags.order(:title)).any? %>
+        <% if (tags = Tag.all.order(:title)).any? %>
           <div class="filter__menu" role="group" aria-label="Tagged">
             <div class="filter__label"><strong>Tagged</strong></div>
 
@@ -133,7 +133,7 @@
             </label>
           </div>
 
-          <% Current.account.users.active.without(Current.user).order(:name).each do |user| %>
+          <% User.active.without(Current.user).order(:name).each do |user| %>
             <div>
               <label class="btn filter__button">
                 <%= check_box_tag "assignee_ids[]", user.id, filter.assignees.include?(user), class: "visually-hidden",
@@ -157,7 +157,7 @@
             </label>
           </div>
 
-          <% Current.account.users.active.without(Current.user).order(:name).each do |user| %>
+          <% User.active.without(Current.user).order(:name).each do |user| %>
             <div>
               <label class="btn filter__button">
                 <%= check_box_tag "creator_ids[]", user.id, filter.creators.include?(user), class: "visually-hidden" %>

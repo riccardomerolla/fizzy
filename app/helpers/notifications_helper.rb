@@ -1,11 +1,9 @@
 module NotificationsHelper
   def notification_title(notification)
-    title = card_title(notification.card)
-
     if notification.resource.is_a? Comment
-      "RE: " + title
+      "RE: " + notification.card.title
     elsif notification_event_action(notification) == "assigned"
-      "Assigned to you: " + title
+      "Assigned to you: " + notification.card.title
     else
       title
     end

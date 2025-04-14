@@ -7,7 +7,7 @@ class UploadsControllerTest < ActionDispatch::IntegrationTest
 
   test "create" do
     assert_changes -> { ActiveStorage::Attachment.count }, 1 do
-      post uploads_url(format: "json"), params: { file: fixture_file_upload("moon.jpg", "image/jpeg") }, as: :xhr
+      post uploads_path(format: "json"), params: { file: fixture_file_upload("moon.jpg", "image/jpeg") }, as: :xhr
     end
 
     assert_response :success
@@ -18,7 +18,7 @@ class UploadsControllerTest < ActionDispatch::IntegrationTest
 
   test "show" do
     accounts("37s").uploads.attach fixture_file_upload("moon.jpg", "image/jpeg")
-    get upload_url(slug: accounts("37s").uploads.last.slug)
+    get upload_path(slug: accounts("37s").uploads.last.slug)
     assert_response :redirect
     assert_match /\/rails\/active_storage\/.*\/moon\.jpg/, @response.redirect_url
   end

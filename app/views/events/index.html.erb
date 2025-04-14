@@ -5,11 +5,11 @@
     <div class="btn btn--circle btn--placeholder flex-item-justify-start"></div>
 
     <div class="events__index-header flex-inline flex-column center gap-half margin-block-end-double txt-align-center">
-      <h2 class="txt-large txt-nowrap center"><%= Current.account.name %> / Latest activity</h2>
+      <h2 class="txt-large txt-nowrap center"><%= Account.sole.name %> / Latest activity</h2>
       <%= render "events/filter" %>
     </div>
 
-    <%= link_to account_users_path, class: "btn flex-item-justify-end" do %>
+    <%= link_to users_path, class: "btn flex-item-justify-end" do %>
       <%= icon_tag "settings" %>
       <span class="for-screen-reader">Account settings</span>
     <% end %>

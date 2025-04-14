@@ -1,8 +1,6 @@
 class User < ApplicationRecord
   include Accessor, Assignee, Avatar, Role, Transferable
 
-  belongs_to :account
-
   has_many :sessions, dependent: :destroy
   has_secure_password validations: false
 

@@ -5,15 +5,11 @@ class EventSummary < ApplicationRecord
 
   # FIXME: Consider persisting the body and compute at write time.
   def body
-    "#{main_summary} #{boosts_summary}".squish
+    events.map { |event| summarize(event) }.join(" ")
   end
 
   private
     delegate :time_ago_in_words, to: "ApplicationController.helpers"
-
-    def main_summary
-      events.non_boosts.map { |event| summarize(event) }.join(" ")
-    end
 
     def summarize(event)
       case event.action
@@ -37,14 +33,6 @@ class EventSummary < ApplicationRecord
         "#{event.creator.name} removed the date."
       when "title_changed"
         "#{event.creator.name} changed title from '#{event.particulars.dig('particulars', 'old_title')}' to '#{event.particulars.dig('particulars', 'new_title')}'."
-      end
-    end
-
-    def boosts_summary
-      if tally = events.boosts.group(:creator).count.presence
-        tally.map do |creator, count|
-          "#{creator.name} +#{count}"
-        end.to_sentence + "."
       end
     end
 end

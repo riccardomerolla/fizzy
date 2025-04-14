@@ -9,21 +9,21 @@ class Cards::ClosuresControllerTest < ActionDispatch::IntegrationTest
     card = cards(:logo)
 
     assert_changes -> { card.reload.closed? }, from: false, to: true do
-      post card_closure_url(card, reason: "Scope too big")
+      post card_closure_path(card, reason: "Scope too big")
     end
 
     assert_equal "Scope too big", card.closure.reason
 
-    assert_redirected_to collection_card_url(card.collection, card)
+    assert_redirected_to collection_card_path(card.collection, card)
   end
 
   test "destroy" do
     card = cards(:shipping)
 
     assert_changes -> { card.reload.closed? }, from: true, to: false do
-      delete card_closure_url(card)
+      delete card_closure_path(card)
     end
 
-    assert_redirected_to collection_card_url(card.collection, card)
+    assert_redirected_to collection_card_path(card.collection, card)
   end
 end

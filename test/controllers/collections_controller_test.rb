@@ -6,13 +6,13 @@ class CollectionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "new" do
-    get new_collection_url
+    get new_collection_path
     assert_response :success
   end
 
   test "create" do
     assert_difference -> { Collection.count }, +1 do
-      post collections_url, params: { collection: { name: "Remodel Punch List" } }
+      post collections_path, params: { collection: { name: "Remodel Punch List" } }
     end
 
     collection = Collection.last
@@ -22,12 +22,12 @@ class CollectionsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "edit" do
-    get edit_collection_url(collections(:writebook))
+    get edit_collection_path(collections(:writebook))
     assert_response :success
   end
 
   test "update" do
-    patch collection_url(collections(:writebook)), params: {
+    patch collection_path(collections(:writebook)), params: {
       collection: {
         name: "Writebook bugs",
         all_access: false
@@ -43,21 +43,21 @@ class CollectionsControllerTest < ActionDispatch::IntegrationTest
 
   test "update all access" do
     collection = Current.set(session: sessions(:kevin)) do
-      accounts("37s").collections.create! name: "New collection", all_access: false
+      Collection.create! name: "New collection", all_access: false
     end
     assert_equal [ users(:kevin) ], collection.users
 
-    patch collection_url(collection), params: { collection: { name: "Bugs", all_access: true } }
+    patch collection_path(collection), params: { collection: { name: "Bugs", all_access: true } }
 
     assert_redirected_to cards_path(collection_ids: [ collection ])
     assert collection.reload.all_access?
-    assert_equal accounts("37s").users, collection.users
+    assert_equal User.all, collection.users
   end
 
   test "destroy" do
     assert_difference -> { Collection.count }, -1 do
-      delete collection_url(collections(:writebook))
-      assert_redirected_to root_url
+      delete collection_path(collections(:writebook))
+      assert_redirected_to root_path
     end
   end
 end

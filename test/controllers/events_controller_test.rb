@@ -9,7 +9,7 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "index" do
-    get events_url
+    get events_path
 
     assert_select "div.event__wrapper[style='grid-area: 17/2']" do
       assert_select "strong", text: "David assigned JZ to Layout is broken"
@@ -19,7 +19,7 @@ class EventsControllerTest < ActionDispatch::IntegrationTest
   test "index with a specific timezone" do
     cookies[:timezone] = "America/New_York"
 
-    get events_url
+    get events_path
 
     assert_select "div.event__wrapper[style='grid-area: 22/2']" do
       assert_select "strong", text: "David assigned JZ to Layout is broken"

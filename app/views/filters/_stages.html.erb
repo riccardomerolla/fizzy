@@ -1,4 +1,4 @@
-<% if Current.account.workflows.any? %>
+<% if Workflow.any? %>
   <div class="quick-filter position-relative" data-controller="dialog" data-action="keydown.esc->dialog#close click@document->dialog#closeOnClickOutside">
     <button class="btn input input--select flex-inline txt-small" data-action="click->dialog#open:stop">
       <span class="overflow-ellipsis">
@@ -20,8 +20,7 @@
           <%= filter_hidden_field_tag key, value %>
         <% end %>
 
-        <% workflow = Current.account.workflows.first %>
-        <% workflow.stages.each do |stage| %>
+        <% Workflow.first.stages.each do |stage| %>
           <div class="btn popup__item">
             <%= form.check_box :stage_ids, {
               multiple: true,

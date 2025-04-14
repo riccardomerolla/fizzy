@@ -7,7 +7,7 @@ class FiltersControllerTest < ActionDispatch::IntegrationTest
 
   test "create" do
     assert_difference "users(:david).filters.count", +1 do
-      post filters_url, params: {
+      post filters_path, params: {
         indexed_by: "closed",
         assignment_status: "unassigned",
         tag_ids: [ tags(:mobile).id ],
@@ -26,7 +26,7 @@ class FiltersControllerTest < ActionDispatch::IntegrationTest
 
   test "destroy" do
     assert_difference "users(:david).filters.count", -1 do
-      delete filter_url(filters(:jz_assignments))
+      delete filter_path(filters(:jz_assignments))
     end
     assert_redirected_to cards_path(filters(:jz_assignments).as_params)
   end

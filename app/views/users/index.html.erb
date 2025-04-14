@@ -16,9 +16,9 @@
 <% end %>
 
 <div class="panel borderless center pad fill-shade flex flex-column margin-block">
-  <%= render "accounts/users/invite" %>
+  <%= render "users/invite" %>
 </div>
 
 <div class="panel borderless center pad fill-none flex flex-column gap">
-  <%= render partial: "accounts/users/user", collection: @users %>
+  <%= render @users %>
 </div>

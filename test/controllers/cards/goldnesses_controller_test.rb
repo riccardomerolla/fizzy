@@ -9,19 +9,19 @@ class Cards::GoldnessesControllerTest < ActionDispatch::IntegrationTest
     card = cards(:text)
 
     assert_changes -> { card.reload.golden? }, from: false, to: true do
-      post card_goldness_url(card)
+      post card_goldness_path(card)
     end
 
-    assert_redirected_to collection_card_url(card.collection, card)
+    assert_redirected_to collection_card_path(card.collection, card)
   end
 
   test "destroy" do
     card = cards(:logo)
 
     assert_changes -> { card.reload.golden? }, from: true, to: false do
-      delete card_goldness_url(card)
+      delete card_goldness_path(card)
     end
 
-    assert_redirected_to collection_card_url(card.collection, card)
+    assert_redirected_to collection_card_path(card.collection, card)
   end
 end

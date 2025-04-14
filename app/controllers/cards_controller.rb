@@ -15,7 +15,8 @@ class CardsController < ApplicationController
   end
 
   def create
-    redirect_to @collection.cards.create!
+    card = @collection.cards.create!
+    redirect_to card
   end
 
   def show
@@ -26,7 +27,7 @@ class CardsController < ApplicationController
 
   def destroy
     @card.destroy!
-    redirect_to cards_path(collection_ids: [ @card.collection ]), notice: deleted_notice
+    redirect_to cards_path(collection_ids: [ @card.collection ]), notice: ("Card deleted" unless @card.creating?)
   end
 
   def update
@@ -49,9 +50,5 @@ class CardsController < ApplicationController
 
     def card_params
       params.expect(card: [ :status, :title, :color, :due_on, :image, :draft_comment, tag_ids: [] ])
-    end
-
-    def deleted_notice
-      "Card deleted" unless @card.creating?
     end
 end

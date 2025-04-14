@@ -1,6 +1,6 @@
 <%= messages_tag(card) do %>
-  <%= render partial: "messages/message", collection: card.messages, cached: true %>
-  <%= render "cards/comments/new", card: card, cached: true %>
+  <%= render partial: "cards/messages/message", collection: card.messages, cached: true %>
+  <%= render "cards/comments/new", card: card %>
 
   <div class="comments__subscribers flex flex-column margin-block txt-align-start full-width">
     <strong class="txt-uppercase">Subscribers</strong>

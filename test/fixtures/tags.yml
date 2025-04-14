@@ -1,7 +1,5 @@
 web:
-  account: 37s
   title: web
 
 mobile:
-  account: 37s
   title: mobile

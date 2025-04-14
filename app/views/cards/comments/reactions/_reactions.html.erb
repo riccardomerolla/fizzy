@@ -1,16 +1,14 @@
 <%= turbo_frame_tag comment, :reacting do %>
-  <%= turbo_stream_from comment, :comments %>
   <div class="reactions flex flex-wrap align-center gap full-width">
-    <div class="flex-inline flex-wrap gap" id="<%= dom_id(comment, :reactions) %>" data-turbo-streaming-target="container">
-      <%= render partial: "cards/comments/reactions/reaction", collection: comment.reactions.ordered, locals: { comment: comment }, cached: true %>
+    <div id="<%= dom_id(comment, :reactions) %>" class="flex-inline flex-wrap gap">
+      <%= render partial: "cards/comments/reactions/reaction", collection: comment.reactions.includes(:reacter).ordered %>
     </div>
 
     <%= turbo_frame_tag comment, :new_reaction do %>
       <div class="flex-inline" data-controller="soft-keyboard">
         <%= link_to new_card_comment_reaction_path(comment.card, comment), role: "button",
               class: "btn reaction__action", action: "soft-keyboard#open" do %>
-          <%= icon_tag "reaction" %>
-          <span class="for-screen-reader">Add a reaction</span>
+          <%= icon_tag "reaction" %> <span class="for-screen-reader">Add a reaction</span>
         <% end %>
       </div>
     <% end %>

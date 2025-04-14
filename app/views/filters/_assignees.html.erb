@@ -35,7 +35,7 @@
           <%= icon_tag "check", class: "checked flex-item-justify-end" %>
         </div>
 
-        <% Current.account.users.active.order(:name).each do |user| %>
+        <% User.active.order(:name).each do |user| %>
           <div class="btn popup__item">
             <%= form.check_box "assignee_ids[]", {
               checked: filter.assignees.include?(user),

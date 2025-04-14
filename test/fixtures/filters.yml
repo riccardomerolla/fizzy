@@ -2,5 +2,5 @@ jz_assignments:
   creator: david
   tags: mobile
   assignees: jz
-  fields: <%= { indexed_by: :most_discussed }.to_json %>
-  params_digest: <%= Filter.digest_params({ indexed_by: :most_discussed, tag_ids: [ ActiveRecord::FixtureSet.identify(:mobile) ], assignee_ids: [ ActiveRecord::FixtureSet.identify(:jz) ] }) %>
+  fields: <%= { indexed_by: :newest }.to_json %>
+  params_digest: <%= Filter.digest_params({ indexed_by: :newest, tag_ids: [ ActiveRecord::FixtureSet.identify(:mobile) ], assignee_ids: [ ActiveRecord::FixtureSet.identify(:jz) ] }) %>

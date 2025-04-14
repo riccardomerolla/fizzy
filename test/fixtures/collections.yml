@@ -1,6 +1,5 @@
 writebook:
   name: Writebook
-  account: 37s
   creator: david
   all_access: true
   workflow: qa

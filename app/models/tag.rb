@@ -1,8 +1,6 @@
 class Tag < ApplicationRecord
   include Filterable
 
-  belongs_to :account, default: -> { Current.account }, touch: true
-
   has_many :taggings, dependent: :destroy
   has_many :cards, through: :taggings
 

@@ -7,14 +7,14 @@ class Cards::CommentsControllerTest < ActionDispatch::IntegrationTest
 
   test "create" do
     assert_difference "cards(:logo).messages.comments.count", +1 do
-      post card_comments_url(cards(:logo), params: { comment: { body: "Agreed." } })
+      post card_comments_path(cards(:logo), params: { comment: { body: "Agreed." } })
     end
 
     assert_response :success
   end
 
   test "update" do
-    put card_comment_url(cards(:logo), comments(:logo_agreement_kevin)), params: { comment: { body: "I've changed my mind" } }
+    put card_comment_path(cards(:logo), comments(:logo_agreement_kevin)), params: { comment: { body: "I've changed my mind" } }
 
     assert_response :success
     assert_equal "I've changed my mind", comments(:logo_agreement_kevin).reload.body.content
@@ -22,7 +22,7 @@ class Cards::CommentsControllerTest < ActionDispatch::IntegrationTest
 
   test "update another user's comment" do
     assert_no_changes "comments(:logo_agreement_jz).body.content" do
-      put card_comment_url(cards(:logo), comments(:logo_agreement_jz)), params: { comment: { body: "I've changed my mind" } }
+      put card_comment_path(cards(:logo), comments(:logo_agreement_jz)), params: { comment: { body: "I've changed my mind" } }
     end
 
     assert_response :forbidden

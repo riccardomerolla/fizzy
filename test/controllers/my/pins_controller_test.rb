@@ -6,7 +6,7 @@ class My::PinsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "index" do
-    get my_pins_url
+    get my_pins_path
 
     assert_response :success
     assert_select "div", text: /#{users(:kevin).pins.first.card.title}/

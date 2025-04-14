@@ -2,11 +2,11 @@ class CollectionsController < ApplicationController
   before_action :set_collection, except: %i[ new create ]
 
   def new
-    @collection = Current.account.collections.build
+    @collection = Collection.new
   end
 
   def create
-    @collection = Current.account.collections.create! collection_params
+    @collection = Collection.create! collection_params
     redirect_to cards_path(collection_ids: [ @collection ])
   end
 
@@ -37,7 +37,7 @@ class CollectionsController < ApplicationController
     end
 
     def grantees
-      Current.account.users.active.where id: grantee_ids
+      User.active.where id: grantee_ids
     end
 
     def revokees

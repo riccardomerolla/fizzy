@@ -1,42 +1,38 @@
 class Cards::Comments::ReactionsController < ApplicationController
+  include CardScoped
+
   before_action :set_comment
 
   def index
-    @reactions = @comment.reactions.ordered.includes(:reacter)
   end
 
   def new
   end
 
   def create
-    @reaction = @comment.reactions.create!(reaction_params)
+    reaction = @comment.reactions.create!(params.expect(reaction: :content))
 
-    broadcast_create
-    redirect_to card_comment_reactions_url(@comment.card, @comment)
+    broadcast_create(reaction)
+    redirect_to card_comment_reactions_path(@card, @comment)
   end
 
   def destroy
-    @reaction = @comment.reactions.find(params[:id])
-    @reaction.destroy!
+    reaction = @comment.reactions.find(params[:id])
+    reaction.destroy
 
-    broadcast_remove
+    broadcast_remove(reaction)
   end
 
   private
     def set_comment
-      @comment = Current.account.comments.find(params[:comment_id])
+      @comment = Comment.belonging_to_card(@card).find(params[:comment_id])
     end
 
-    def reaction_params
-      params.require(:reaction).permit(:content)
+    def broadcast_create(reaction)
+      reaction.broadcast_append_to @card, target: [ @comment, :reactions ], partial: "cards/comments/reactions/reaction"
     end
 
-    def broadcast_create
-      @reaction.broadcast_append_to @reaction.comment, :comments,
-        target: "reactions_comment_#{@comment.id}", partial: "cards/comments/reactions/reaction", locals: { comment: @comment }
-    end
-
-    def broadcast_remove
-      @reaction.broadcast_remove_to @reaction.comment, :comments
+    def broadcast_remove(reaction)
+      reaction.broadcast_remove_to @card
     end
 end

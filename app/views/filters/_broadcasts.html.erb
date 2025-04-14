@@ -3,5 +3,5 @@
     <%= turbo_stream_from collection %>
   <% end %>
 <% else %>
-  <%= turbo_stream_from Current.account, :collections %>
+  <%= turbo_stream_from :collections %>
 <% end %>

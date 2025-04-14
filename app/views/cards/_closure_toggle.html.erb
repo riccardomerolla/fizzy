@@ -11,7 +11,7 @@
         <%= icon_tag "caret-down" %>
       </summary>
       <div class="expander__content btn borderless">
-        <% Current.account.closure_reasons.labels.each do |label| %>
+        <% Closure::Reason.labels.each do |label| %>
           <%= button_to card_closure_path(card, reason: label), class: "expander__item btn" do %>
             <span class="overflow-ellipsis"><%= label %></span>
           <% end %>

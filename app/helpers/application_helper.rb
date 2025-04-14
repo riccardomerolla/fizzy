@@ -4,9 +4,6 @@ module ApplicationHelper
   end
 
   def icon_tag(name, **options)
-    classes = class_names "icon icon--#{name}", options.delete(:class)
-    options["aria-hidden"] = true
-
-    content_tag :span, "", class: classes, **options
+    tag.span class: class_names("icon icon--#{name}", options.delete(:class)), "aria-hidden": true, **options
   end
 end

@@ -5,17 +5,9 @@ class NotifierTest < ActiveSupport::TestCase
     assert_kind_of Notifier::Published, Notifier.for(events(:logo_published))
   end
 
-  test "for does not raise an error when the event is not notifiable" do
-    assert_nothing_raised do
-      assert_no_difference -> { Notification.count } do
-        Notifier.for(events(:logo_boost_dhh))
-      end
-    end
-  end
-
   test "generate does not create notifications if the event was system-generated" do
     cards(:logo).drafted!
-    events(:logo_published).update!(creator: accounts("37s").users.system)
+    events(:logo_published).update!(creator: User.system)
 
     assert_no_difference -> { Notification.count } do
       Notifier.for(events(:logo_published)).generate

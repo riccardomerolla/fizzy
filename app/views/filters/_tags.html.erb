@@ -22,7 +22,7 @@
           <span class="overflow-ellipsis">Clear all</span>
         <% end %>
 
-        <% Current.account.tags.order(:title).each do |tag| %>
+        <% Tag.order(:title).each do |tag| %>
           <div class="btn popup__item">
             <%= form.check_box "tag_ids[]", {
               checked: filter.tags.include?(tag),

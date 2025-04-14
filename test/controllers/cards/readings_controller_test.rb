@@ -7,7 +7,7 @@ class Cards::ReadingsControllerTest < ActionDispatch::IntegrationTest
 
   test "index" do
     assert_changes -> { notifications(:logo_published_kevin).reload.read? }, from: false, to: true do
-      post card_reading_url(cards(:logo)), as: :turbo_stream
+      post card_reading_path(cards(:logo)), as: :turbo_stream
     end
 
     assert_response :success

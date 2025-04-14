@@ -34,6 +34,6 @@ module Collection::Accessible
 
   private
     def grant_access_to_everyone
-      accesses.grant_to(account.users) if all_access_previously_changed?(to: true)
+      accesses.grant_to(User.all) if all_access_previously_changed?(to: true)
     end
 end

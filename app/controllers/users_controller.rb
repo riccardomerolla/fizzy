@@ -1,15 +1,20 @@
 class UsersController < ApplicationController
   require_unauthenticated_access only: %i[ new create ]
 
-  before_action :set_user, only: %i[ show edit update ]
+  before_action :set_user, only: %i[ show edit update destroy ]
   before_action :set_account_from_join_code, only: %i[ new create ]
+  before_action :ensure_permission_to_administer_user, only:  %i[ update destroy ]
+
+  def index
+    @users = User.active
+  end
 
   def new
-    @user = @account.users.build
+    @user = User.new
   end
 
   def create
-    user = @account.users.create!(user_params)
+    user = User.create!(user_params)
     start_new_session_for user
     redirect_to root_path
   end
@@ -21,8 +26,13 @@ class UsersController < ApplicationController
   end
 
   def update
-    @user.update user_params
-    redirect_to user_path(@user)
+    @user.update! user_params
+    redirect_to @user
+  end
+
+  def destroy
+    @user.deactivate
+    redirect_to users_path
   end
 
   private
@@ -31,7 +41,11 @@ class UsersController < ApplicationController
     end
 
     def set_user
-      @user = Current.account.users.active.find(params[:id])
+      @user = User.active.find(params[:id])
+    end
+
+    def ensure_permission_to_administer_user
+      head :forbidden unless Current.user.can_administer?(@user)
     end
 
     def user_params

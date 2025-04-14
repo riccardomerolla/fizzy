@@ -6,7 +6,7 @@ class Cards::PreviewsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "index" do
-    get cards_previews_url(format: :turbo_stream)
+    get cards_previews_path(format: :turbo_stream)
 
     assert_response :success
   end

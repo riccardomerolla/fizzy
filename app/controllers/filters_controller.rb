@@ -8,7 +8,12 @@ class FiltersController < ApplicationController
 
   def destroy
     @filter.destroy!
-    redirect_after_destroy
+
+    if request.referer == root_url
+      redirect_to root_path
+    else
+      redirect_to cards_path(@filter.as_params)
+    end
   end
 
   private
@@ -18,13 +23,5 @@ class FiltersController < ApplicationController
 
     def filter_params
       params.permit(*Filter::PERMITTED_PARAMS).compact_blank
-    end
-
-    def redirect_after_destroy
-      if request.referer == root_url
-        redirect_to root_path
-      else
-        redirect_to cards_path(@filter.as_params)
-      end
     end
 end

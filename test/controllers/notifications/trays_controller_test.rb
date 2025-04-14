@@ -6,7 +6,7 @@ class Notifications::TraysControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "show" do
-    get notifications_tray_url
+    get notifications_tray_path
 
     assert_response :success
     assert_select "div", text: /Layout is broken/

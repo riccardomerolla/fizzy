@@ -37,7 +37,7 @@
           <%= icon_tag "check", class: "checked flex-item-justify-end" %>
         </div>
 
-        <% Current.account.users.active.without(Current.user).order(:name).each do |user| %>
+        <% User.active.without(Current.user).order(:name).each do |user| %>
           <div class="btn popup__item">
             <%= form.check_box :creator_ids, {
               multiple: true,

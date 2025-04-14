@@ -7,17 +7,13 @@ class FirstRunsController < ApplicationController
   end
 
   def create
-    user = FirstRun.create!(user_params)
+    user = FirstRun.create!(params.expect(user: [ :name, :email_address, :password ]))
     start_new_session_for user
     redirect_to root_path
   end
 
   private
     def prevent_repeats
-      redirect_to root_path unless Account.none?
-    end
-
-    def user_params
-      params.expect(user: [ :name, :email_address, :password ])
+      redirect_to root_path if Account.any?
     end
 end

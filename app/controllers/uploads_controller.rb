@@ -5,7 +5,8 @@ class UploadsController < ApplicationController
   before_action :set_attachment, only: :show
 
   def create
-    @upload = Current.account.uploads_attachments.create! blob: create_blob!
+    # FIXME: Try to get upload attachments on root
+    @upload = Account.sole.uploads_attachments.create! blob: create_blob!
   end
 
   def show

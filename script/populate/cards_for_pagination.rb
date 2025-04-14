@@ -4,9 +4,9 @@ CARDS_COUNT = 200
 
 ApplicationRecord.current_tenant = "development-tenant"
 account = Account.first
-user = account.users.first
+user = User.first
 Current.session = user.sessions.last
-collection = account.collections.first
+collection = Collection.first
 
 # Doing
 

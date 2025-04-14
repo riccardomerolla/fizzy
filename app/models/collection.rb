@@ -1,7 +1,6 @@
 class Collection < ApplicationRecord
   include Accessible, Broadcastable, Filterable
 
-  belongs_to :account
   belongs_to :creator, class_name: "User", default: -> { Current.user }
   belongs_to :workflow, optional: true
 

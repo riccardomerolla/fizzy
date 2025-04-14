@@ -75,7 +75,7 @@
   <strong class="txt-large">Choose a workflow</strong>
   <p class="margin-none">Use a workflow to track progress in this collection.</p>
   <%= form_with model: @collection, url: collection_workflow_path(@collection), local: true, method: :patch, data: { controller: "form" } do |form| %>
-    <%= form.select :workflow_id, Current.account.workflows.map { |w| [w.name, w.id] }, { include_blank: "Choose…" }, class: "input input--select full-width", data: { action: "change->form#submit" } %>
+    <%= form.select :workflow_id, Workflow.all.map { |w| [w.name, w.id] }, { include_blank: "Choose…" }, class: "input input--select full-width", data: { action: "change->form#submit" } %>
   <% end %>
   <p><%= link_to "Manage workflows", workflows_path, class: "btn btn--plain txt-link" %></p>
 </div>

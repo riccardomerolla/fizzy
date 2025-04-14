@@ -4,8 +4,6 @@ logo:
   title: The logo isn't big enough
   due_on: <%= 3.days.from_now %>
   created_at: <%= 1.week.ago %>
-  boosts_count: 5
-  comments_count: 2
   activity_score: 7
   status: published
   last_active_at: <%= Time.current %>
@@ -15,7 +13,6 @@ layout:
   creator: david
   title: Layout is broken
   created_at: <%= 1.week.ago %>
-  comments_count: 1
   activity_score: 1
   status: published
   last_active_at: <%= Time.current %>

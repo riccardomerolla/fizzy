@@ -2,15 +2,15 @@ class WorkflowsController < ApplicationController
   before_action :set_workflow, only: %i[ show edit update destroy ]
 
   def index
-    @workflows = Current.account.workflows
+    @workflows = Workflow.all
   end
 
   def new
-    @workflow = Current.account.workflows.new
+    @workflow = Workflow.new
   end
 
   def create
-    @workflow = Current.account.workflows.create! workflow_params
+    @workflow = Workflow.create! workflow_params
     # FIXME: this should definitely change.
     [ "Triage", "In progress", "On Hold", "Review" ].each { |name| @workflow.stages.create! name: name }
     redirect_to workflows_path
@@ -24,7 +24,7 @@ class WorkflowsController < ApplicationController
 
   def update
     @workflow.update! workflow_params
-    redirect_to workflow_path(@workflow)
+    redirect_to @workflow
   end
 
   def destroy
@@ -34,10 +34,10 @@ class WorkflowsController < ApplicationController
 
   private
     def set_workflow
-      @workflow = Current.account.workflows.find params[:id]
+      @workflow = Workflow.find params[:id]
     end
 
     def workflow_params
-      params.expect workflow: [ :name ]
+      params.expect workflow: :name
     end
 end

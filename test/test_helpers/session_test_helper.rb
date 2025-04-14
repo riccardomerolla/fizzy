@@ -6,12 +6,12 @@ module SessionTestHelper
   def sign_in_as(user)
     cookies[:session_token] = nil
     user = users(user) unless user.is_a? User
-    post session_url, params: { email_address: user.email_address, password: "secret123456" }
+    post session_path, params: { email_address: user.email_address, password: "secret123456" }
     assert cookies[:session_token].present?
   end
 
   def sign_out
-    delete session_url
+    delete session_path
     assert_not cookies[:session_token].present?
   end
 

@@ -36,7 +36,6 @@ module Card::Scorable
 
     def event_weight(event)
       case
-      when event.boosted? then 1
       when event.comment&.first_by_author_on_card? then 20
       when event.comment&.follows_comment_by_another_author? then 15
       when event.commented? then 10
@@ -60,6 +59,6 @@ module Card::Scorable
     end
 
     def scorable_events
-      events.where(action: [ :commented, :boosted ])
+      events.where(action: :commented)
     end
 end

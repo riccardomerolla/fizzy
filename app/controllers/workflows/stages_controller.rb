@@ -9,7 +9,7 @@ class Workflows::StagesController < ApplicationController
 
   def create
     @stage = @workflow.stages.create! stage_params
-    redirect_to workflow_path(@workflow)
+    redirect_to @workflow
   end
 
   def edit
@@ -17,12 +17,12 @@ class Workflows::StagesController < ApplicationController
 
   def update
     @stage.update! stage_params
-    redirect_to workflow_path(@workflow)
+    redirect_to @workflow
   end
 
   def destroy
     @stage.destroy
-    redirect_to workflow_path(@workflow)
+    redirect_to @workflow
   end
 
   private

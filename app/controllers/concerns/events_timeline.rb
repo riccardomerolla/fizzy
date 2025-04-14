@@ -19,13 +19,9 @@ module EventsTimeline
     end
 
     def events_for_activity_day
-      user_events.where(created_at: @activity_day.all_day).
-        group_by { |event| [ event.created_at.hour, helpers.event_column(event) ] }.
-        map { |hour_col, events|
-          [ hour_col,
-            events.uniq { |e| e.action == "boosted" ? [ e.creator_id, e.card_id ] : e.id }
-          ]
-        }
+      user_events.where(created_at: @activity_day.all_day)
+        .group_by { |event| [ event.created_at.hour, helpers.event_column(event) ] }
+        .map { |hour_col, events| [ hour_col, events.uniq { |e| e.id } ] }
     end
 
     def latest_event_before_activity_day
@@ -33,12 +29,12 @@ module EventsTimeline
     end
 
     def user_events
-      Event.where(card: user_cards, creator: Current.account.users)
+      Event.where(card: user_cards)
     end
 
     def user_cards
       Current.user.accessible_cards
-            .published_or_drafted_by(Current.user)
-            .where(collection_id: collection_filter)
+        .published_or_drafted_by(Current.user)
+        .where(collection_id: collection_filter)
     end
 end

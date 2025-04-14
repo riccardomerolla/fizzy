@@ -16,18 +16,18 @@ class CollectionTest < ActiveSupport::TestCase
 
   test "grants access to everyone after creation" do
     collection = Current.set(session: sessions(:david)) do
-      accounts("37s").collections.create! name: "New collection", all_access: true
+      Collection.create! name: "New collection", all_access: true
     end
-    assert_equal accounts("37s").users, collection.users
+    assert_equal User.all, collection.users
   end
 
   test "grants access to everyone after update" do
     collection = Current.set(session: sessions(:david)) do
-      accounts("37s").collections.create! name: "New collection"
+      Collection.create! name: "New collection"
     end
     assert_equal [ users(:david) ], collection.users
 
     collection.update! all_access: true
-    assert_equal accounts("37s").users, collection.users.reload
+    assert_equal User.all, collection.users.reload
   end
 end
