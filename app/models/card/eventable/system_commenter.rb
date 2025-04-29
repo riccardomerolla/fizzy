@@ -17,35 +17,35 @@ class Card::Eventable::SystemCommenter
 
   private
     REPLACEABLE_EVENTS = [
-      %w(card_assigned card_unassigned),
-      %w(card_staged card_unstaged),
-      %w(card_due_date_added card_due_date_changed card_due_date_removed)
+      %w[card_assigned card_unassigned],
+      %w[card_staged card_unstaged],
+      %w[card_due_date_added card_due_date_changed card_due_date_removed]
     ]
 
     def comment_body
       case event.action
-        when "card_assigned"
+      when "card_assigned"
+        "Assigned to #{card.assignees.pluck(:name).to_sentence}."
+      when "card_unassigned"
+        if card.assignees.empty?
+          "Unassigned from #{event.assignees.pluck(:name).to_sentence}."
+        else
           "Assigned to #{card.assignees.pluck(:name).to_sentence}."
-        when "card_unassigned"
-          if card.assignees.empty?
-            "Unassigned from #{event.assignees.pluck(:name).to_sentence}."
-          else
-            "Assigned to #{card.assignees.pluck(:name).to_sentence}."
-          end
-        when "card_staged"
-          "#{event.creator.name} moved this to '#{event.stage_name}'."
-        when "card_closed"
-          "Closed by #{ event.creator.name }"
-        when "card_unstaged"
-          "#{event.creator.name} removed this from '#{event.stage_name}'."
-        when "card_due_date_added"
-          "#{event.creator.name} set due date to #{event.particulars.dig('particulars', 'due_date').to_date.strftime('%B %-d')}."
-        when "card_due_date_changed"
-          "#{event.creator.name} changed due date to #{event.particulars.dig('particulars', 'due_date').to_date.strftime('%B %-d')}."
-        when "card_due_date_removed"
-          "#{event.creator.name} removed the date."
-        when "card_title_changed"
-          "#{event.creator.name} changed title from '#{event.particulars.dig('particulars', 'old_title')}' to '#{event.particulars.dig('particulars', 'new_title')}'."
+        end
+      when "card_staged"
+        "#{event.creator.name} moved this to '#{event.stage_name}'."
+      when "card_closed"
+        "Closed by #{ event.creator.name }"
+      when "card_unstaged"
+        "#{event.creator.name} removed this from '#{event.stage_name}'."
+      when "card_due_date_added"
+        "#{event.creator.name} set due date to #{event.particulars.dig('particulars', 'due_date').to_date.strftime('%B %-d')}."
+      when "card_due_date_changed"
+        "#{event.creator.name} changed due date to #{event.particulars.dig('particulars', 'due_date').to_date.strftime('%B %-d')}."
+      when "card_due_date_removed"
+        "#{event.creator.name} removed the date."
+      when "card_title_changed"
+        "#{event.creator.name} changed title from '#{event.particulars.dig('particulars', 'old_title')}' to '#{event.particulars.dig('particulars', 'new_title')}'."
       end
     end
 
