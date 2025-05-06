@@ -165,6 +165,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_05_05_123008) do
     t.string "type"
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
+    t.index ["user_id", "created_at"], name: "index_commands_on_user_id_and_created_at"
     t.index ["user_id"], name: "index_commands_on_user_id"
   end
 

@@ -6,6 +6,8 @@ class CreateCommands < ActiveRecord::Migration[8.1]
       t.json :data, default: {}
 
       t.timestamps
+
+      t.index %i[ user_id created_at ]
     end
   end
 end
