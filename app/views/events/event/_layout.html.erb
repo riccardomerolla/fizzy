@@ -24,6 +24,6 @@
 
     <%= yield %>
 
-    <span class="event__collection"><%= event.collection.name %></span>
+    <span class="event__collection"><span><%= card.id %></span> · <%= event.collection.name %></span>
   </div>
 <% end %>
