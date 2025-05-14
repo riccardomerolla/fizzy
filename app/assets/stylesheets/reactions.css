@@ -151,10 +151,10 @@
 
       position: relative;
 
-      @media (any-hover: hover) {
-        &:hover {
-          z-index: 1;
-        }
+      /* Make sure the selection ring sits on top of adjacent buttons on hover */
+      &:hover,
+      &:focus-visible {
+        z-index: 1;
       }
     }
   }
