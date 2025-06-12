@@ -1,3 +1,4 @@
 37s:
   name: 37signals
   join_code: "ejpP-THlQ-Cc2f"
+  queenbee_id: <%= ActiveRecord::FixtureSet.identify :'37s_fizzy' %>

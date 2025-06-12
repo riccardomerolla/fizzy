@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_06_09_102553) do
+ActiveRecord::Schema[8.1].define(version: 2025_06_11_203906) do
   create_table "accesses", force: :cascade do |t|
     t.integer "collection_id", null: false
     t.datetime "created_at", null: false
@@ -26,7 +26,9 @@ ActiveRecord::Schema[8.1].define(version: 2025_06_09_102553) do
     t.datetime "created_at", null: false
     t.string "join_code"
     t.string "name", null: false
+    t.integer "queenbee_id"
     t.datetime "updated_at", null: false
+    t.index ["queenbee_id"], name: "index_accounts_on_queenbee_id", unique: true
   end
 
   create_table "action_text_rich_texts", force: :cascade do |t|

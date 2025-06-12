@@ -3,6 +3,7 @@ require_relative "../config/environment"
 require "rails/test_help"
 require "webmock/minitest"
 require "vcr"
+require "signal_id/testing"
 
 WebMock.allow_net_connect!
 
@@ -25,6 +26,7 @@ module ActiveSupport
     fixtures :all
 
     include ActiveJob::TestHelper
+    include SignalId::Testing
     include ActionTextTestHelper, CardTestHelper, ChangeTestHelper, SessionTestHelper
   end
 end

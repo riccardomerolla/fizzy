@@ -1,7 +1,4 @@
 require "test_helper"
 
-class OrganizationTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+class AccountTest < ActiveSupport::TestCase
 end
