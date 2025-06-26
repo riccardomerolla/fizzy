@@ -1,8 +1,11 @@
 @layer components {
   .filters {
+    view-transition-name: "filters";
+    z-index: var(--z-popup);
+
     #header:has(&) {
       position: relative;
-      z-index: 1;
+      z-index: var(--z-popup);
     }
 
     .btn {

@@ -25,12 +25,12 @@
 
 		<%= render "events/filter/header" %>
 
-		<strong class="popup__group-title">Collections</strong>
 		<%= form_with url: events_path, method: :get, class: "popup__list",
 					data: { controller: "form" } do |form| %>
 			<% if Current.user.collections.many? %>
 				<ul class="popup__list">
 					<%= render "events/filter/custom_collections" %>
+					<strong class="popup__group-title">Collections</strong>
 					<%= render "events/filter/all_collections_option", form: form, filter: filter %>
 					<%= render partial: "events/filter/collection_option", collection: Current.user.collections.ordered_by_recently_accessed, as: :collection, locals: { form: form, filter: filter } %>
 				</ul>

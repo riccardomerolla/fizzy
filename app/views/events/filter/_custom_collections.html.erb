@@ -1,11 +1,12 @@
-<div class="popup__list">
+<% if @filters.any? %>
+  <strong class="popup__group-title">Saved filters</strong>
   <% @filters.each do |filter| %>
     <div class="popup__group flex align-center full-width gap-half overflow-ellipsis" data-filter-target="item" data-navigable-list-target="item">
       <%= link_to cards_path(**filter.as_params), class: "btn popup__new popup__item" do %>
-        <%= icon_tag "filter" %>
+        <%= icon_tag "bookmark" %>
         <span class="overflow-ellipsis"><%= filter.summary %></span>
         <span class="translucent flex-item-no-shrink flex-item-justify-end"> ›</span>
       <% end %>
     </div>
   <% end %>
-</div>
+<% end %>

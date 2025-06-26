@@ -12,7 +12,7 @@ class FiltersController < ApplicationController
     if request.referer == root_url
       redirect_to root_path
     else
-      redirect_to cards_path(@filter.as_params)
+      redirect_to cards_path
     end
   end
 

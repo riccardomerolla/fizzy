@@ -1,4 +1,4 @@
-<% if filter.tags.any? %>
+<% if filter.tags.any?|| @expand_all %>
   <div class="quick-filter position-relative" data-controller="dialog" data-action="keydown.esc->dialog#close click@document->dialog#closeOnClickOutside">
     <button class="btn input input--select flex-inline txt-x-small" data-action="click->dialog#open:stop">
       <span class="overflow-ellipsis">
@@ -16,6 +16,10 @@
             data: { controller: "form" } do |form| %>
         <% filter.as_params.except(:tag_ids).each do |key, value| %>
           <%= filter_hidden_field_tag key, value %>
+        <% end %>
+
+        <% if @expand_all %>
+          <%= hidden_field_tag :expand_all, @expand_all %>
         <% end %>
 
         <%= link_to cards_path(filter.as_params.except(:tag_ids)), class: "btn popup__item" do %>

@@ -1,17 +1,47 @@
 <div class="filters flex align-center gap-half margin-none-block-end margin-block-start-half justify-center center">
   <div class="flex-inline center align-center gap-half">
+    <% if any_filters?(filter) %>
+      <% if @expand_all %>
+        <%= link_to cards_path(filter.as_params), class: "btn txt-x-small btn--reversed", aria: { selected: true} do %>
+          <%= icon_tag "filter" %>
+          <span class="for-screen-reader">Edit filters</span>
+        <% end %>
+      <% else %>
+        <%= link_to cards_path(filter.as_params.merge(expand_all: true)), class: "btn txt-x-small" do %>
+          <%= icon_tag "filter" %>
+          <span class="for-screen-reader">Edit filters</span>
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <%= render "filters/indexed_by", filter: filter %>
     <%= render "filters/tags", filter: filter %>
     <%= render "filters/assignees", filter: filter %>
     <%= render "filters/creators", filter: filter %>
-    <%= render "filters/stages", filter: filter %>
+    <%# FIXME LATER: this needs to be able to allow selection of unique stages across all active workflows %>
+    <%#= render "filters/stages", filter: filter %>
     <%= render "filters/cards", filter: filter %>
-    <%= render "filters/indexed_by", filter: filter %>
+    
 
     <% filter.terms.each do |term| %>
       <%= filter_chip_tag %Q("#{term}"), filter.as_params_without(:terms, term) %>
     <% end %>
 
     <% if any_filters?(filter) %>
+      <% existing_filter = Current.user.filters.find_by_params(filter.as_params) %>
+      <% if existing_filter&.persisted? %>
+        <%= button_to filter_path(existing_filter), method: :delete, class: "btn txt-x-small btn--reversed", form_class: "inline" do %>
+          <%= icon_tag "bookmark" %>
+          <span class="for-screen-reader">Remove saved filter</span>
+        <% end %>
+      <% else %>
+        <% filter_params = filter.as_params.transform_values { |v| v.respond_to?(:to_str) ? v.to_str : v } %>
+        <%= button_to filters_path, method: :post, params: filter_params, class: "btn txt-x-small", form_class: "inline" do %>
+          <%= icon_tag "bookmark" %>
+          <span class="for-screen-reader">Save filter</span>
+        <% end %>
+      <% end %>
+
       <%= link_to cards_path(filter.as_params.except(:assignee_ids, :assignment_status, :card_ids, :creator_ids, :stage_ids, :tag_ids, :terms, :indexed_by)), class: "btn btn--remove txt-x-small" do %>
         <%= icon_tag "close" %>
         <span class="for-screen-reader">Clear all</span>
