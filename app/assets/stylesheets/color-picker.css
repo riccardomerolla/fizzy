@@ -1,18 +1,40 @@
-.color-picker {
-  --panel-border-color: var(--card-color);
-  --panel-border-radius: 2em;
-  --panel-border-size: 2px;
-  --panel-padding: 0.5em;
-  --panel-size: auto;
+@layer components {
+  .color-picker {
+    --color-picker-origin: calc(var(--btn-size) / 2 + var(--color-picker-spacer));
+    --color-picker-spacer: 0.5ch;
 
-  inline-size: auto !important;
-  inset: 50% auto auto calc(-1 * var(--panel-padding));
-  max-inline-size: var(--panel-size) !important;
-  position: absolute;
-  translate: 0 -50%;
-  z-index: var(--z-popup);
+    background-color: var(--color-canvas);
+    border-radius: calc(var(--btn-size) / 2 + var(--color-picker-spacer));
+    gap: var(--color-picker-spacer);
+    inline-size: auto !important;
+    inset: calc(-1 * var(--color-picker-spacer)) auto auto calc(-1 * var(--color-picker-spacer));
+    max-inline-size: var(--panel-size) !important;
+    padding: var(--color-picker-spacer);
+    position: absolute;
+    transform: scale(0.5);
+    transform-origin: var(--color-picker-origin) var(--color-picker-origin);
+    transition: 150ms allow-discrete;
+    transition-property: display, opacity, overlay, transform;
+    z-index: var(--z-popup);opacity: 0;
 
-  &[open] {
-    display: flex;
+    &[open] {
+      display: flex;
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    @starting-style {
+      &[open] {
+        opacity: 0;
+        transform: scale(0.5);
+      }
+    }
+  }
+
+  .color-picker__colors {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--color-picker-spacer);
   }
 }
+

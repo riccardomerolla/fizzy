@@ -4,7 +4,7 @@
     <span class="for-screen-reader">Change color</span>
   </button>
 
-  <dialog class="color-picker panel fill-white shadow gap-half" data-dialog-target="dialog" data-action="keydown.esc->dialog#close click@document->dialog#closeOnClickOutside">
+  <dialog class="color-picker shadow" data-dialog-target="dialog" data-action="keydown.esc->dialog#close click@document->dialog#closeOnClickOutside">
     <form method="dialog">
       <button class="btn txt-small tooltip">
         <%= icon_tag "remove" %>
@@ -12,15 +12,13 @@
       </button>
     </form>
 
-    <%= form_with model: stage, url: workflow_stage_path(stage.workflow, stage), class: "flex gap-half", data: { controller: "form", action: "change->form#submit" } do |form| %>
+    <%= form_with model: stage, url: workflow_stage_path(stage.workflow, stage), class: "color-picker__colors", data: { controller: "form", action: "change->form#submit" } do |form| %>
       <% Card::COLORS.each do |color| %>
-        <span class="color-picker__color">
-          <label class="btn btn--circle txt-small borderless" style="--btn-background: <%= color %>" title="<%= color %>">
-            <%= form.radio_button :color, color %>
-            <%= icon_tag "check", class: "checked" %>
-            <span class="for-screen-reader"><%= color %></span>
-          </label>
-        </span>
+        <label class="btn btn--circle txt-small borderless" style="--btn-background: <%= color %>" title="<%= color %>">
+          <%= form.radio_button :color, color %>
+          <%= icon_tag "check", class: "checked" %>
+          <span class="for-screen-reader"><%= color %></span>
+        </label>
       <% end %>
     <% end %>
   </dialog>
