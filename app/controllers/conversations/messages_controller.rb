@@ -1,4 +1,6 @@
 class Conversations::MessagesController < ApplicationController
+  include StaffOnly
+
   before_action :set_conversation
 
   def index
