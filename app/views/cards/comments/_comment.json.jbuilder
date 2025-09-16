@@ -1,0 +1,18 @@
+json.cache! comment do
+  json.(comment, :id)
+
+  json.created_at comment.created_at.utc
+  json.updated_at comment.updated_at.utc
+
+  json.body do
+    json.plain_text comment.body.to_plain_text
+    json.html comment.body.to_s
+  end
+
+  json.creator do
+    json.partial! "users/user", user: comment.creator
+  end
+
+  json.reactions_url card_comment_reactions_url(comment.card_id, comment.id)
+  json.url card_comment_url(comment.card_id, comment.id)
+end

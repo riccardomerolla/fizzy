@@ -20,6 +20,12 @@ Rails.application.routes.draw do
     end
 
     resources :cards, only: %i[ create ]
+
+    resources :webhooks do
+      scope module: "webhooks" do
+        resource :activation, only: %i[ create ]
+      end
+    end
   end
 
   namespace :cards do
@@ -168,6 +174,10 @@ Rails.application.routes.draw do
 
   resolve "Event" do |event, options|
     polymorphic_url(event.eventable, options)
+  end
+
+  resolve "Webhook" do |webhook, options|
+    route_for :collection_webhook, webhook.collection, webhook, options
   end
 
   get "up", to: "rails/health#show", as: :rails_health_check

@@ -1,5 +1,5 @@
 class ConversationsController < ApplicationController
-  include StaffOnly
+  before_action :ensure_is_staff_member
 
   def create
     Current.user.start_or_continue_conversation

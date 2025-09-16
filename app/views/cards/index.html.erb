@@ -20,6 +20,7 @@
 
   <div class="header__actions header__actions--end">
     <% if collection = @filter.single_collection %>
+      <%= render "cards/webhooks", collection: collection if Current.user.admin? %>
       <%= render "cards/collection_settings", collection: collection %>
     <% end %>
   </div>

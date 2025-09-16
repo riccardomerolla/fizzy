@@ -1248,7 +1248,7 @@ columns:
   - *9
   - *18
   users:
-  - !ruby/object:ActiveRecord::ConnectionAdapters::SQLite3::Column
+  - &38 !ruby/object:ActiveRecord::ConnectionAdapters::SQLite3::Column
     auto_increment:
     name: active
     cast_type: *32
@@ -1315,6 +1315,131 @@ columns:
     sql_type_metadata: *33
     'null': false
     default: true
+    default_function:
+    collation:
+    comment:
+  webhook_delinquency_trackers:
+  - !ruby/object:ActiveRecord::ConnectionAdapters::SQLite3::Column
+    auto_increment:
+    name: consecutive_failures_count
+    cast_type: *3
+    sql_type_metadata: *4
+    'null': true
+    default:
+    default_function:
+    collation:
+    comment:
+  - *5
+  - !ruby/object:ActiveRecord::ConnectionAdapters::SQLite3::Column
+    auto_increment:
+    name: first_failure_at
+    cast_type: *1
+    sql_type_metadata: *2
+    'null': true
+    default:
+    default_function:
+    collation:
+    comment:
+  - *6
+  - *9
+  - &37 !ruby/object:ActiveRecord::ConnectionAdapters::SQLite3::Column
+    auto_increment:
+    name: webhook_id
+    cast_type: *3
+    sql_type_metadata: *4
+    'null': false
+    default:
+    default_function:
+    collation:
+    comment:
+  webhook_deliveries:
+  - *5
+  - !ruby/object:ActiveRecord::ConnectionAdapters::SQLite3::Column
+    auto_increment:
+    name: event_id
+    cast_type: *3
+    sql_type_metadata: *4
+    'null': false
+    default:
+    default_function:
+    collation:
+    comment:
+  - *6
+  - !ruby/object:ActiveRecord::ConnectionAdapters::SQLite3::Column
+    auto_increment:
+    name: request
+    cast_type: *15
+    sql_type_metadata: *16
+    'null': true
+    default:
+    default_function:
+    collation:
+    comment:
+  - !ruby/object:ActiveRecord::ConnectionAdapters::SQLite3::Column
+    auto_increment:
+    name: response
+    cast_type: *15
+    sql_type_metadata: *16
+    'null': true
+    default:
+    default_function:
+    collation:
+    comment:
+  - !ruby/object:ActiveRecord::ConnectionAdapters::SQLite3::Column
+    auto_increment:
+    name: state
+    cast_type: *7
+    sql_type_metadata: *8
+    'null': false
+    default:
+    default_function:
+    collation:
+    comment:
+  - *9
+  - *37
+  webhooks:
+  - *38
+  - *24
+  - *5
+  - *6
+  - !ruby/object:ActiveRecord::ConnectionAdapters::SQLite3::Column
+    auto_increment:
+    name: name
+    cast_type: *7
+    sql_type_metadata: *8
+    'null': true
+    default:
+    default_function:
+    collation:
+    comment:
+  - !ruby/object:ActiveRecord::ConnectionAdapters::SQLite3::Column
+    auto_increment:
+    name: signing_secret
+    cast_type: *7
+    sql_type_metadata: *8
+    'null': false
+    default:
+    default_function:
+    collation:
+    comment:
+  - !ruby/object:ActiveRecord::ConnectionAdapters::SQLite3::Column
+    auto_increment:
+    name: subscribed_actions
+    cast_type: *15
+    sql_type_metadata: *16
+    'null': true
+    default:
+    default_function:
+    collation:
+    comment:
+  - *9
+  - !ruby/object:ActiveRecord::ConnectionAdapters::SQLite3::Column
+    auto_increment:
+    name: url
+    cast_type: *15
+    sql_type_metadata: *16
+    'null': false
+    default:
     default_function:
     collation:
     comment:
@@ -1397,6 +1522,9 @@ primary_keys:
   user_settings: id
   users: id
   watches: id
+  webhook_delinquency_trackers: id
+  webhook_deliveries: id
+  webhooks: id
   workflow_stages: id
   workflows: id
 data_sources:
@@ -1448,6 +1576,9 @@ data_sources:
   user_settings: true
   users: true
   watches: true
+  webhook_delinquency_trackers: true
+  webhook_deliveries: true
+  webhooks: true
   workflow_stages: true
   workflows: true
 indexes:
@@ -2858,23 +2989,7 @@ indexes:
     nulls_not_distinct:
     comment:
     valid: true
-  tags:
-  - !ruby/object:ActiveRecord::ConnectionAdapters::IndexDefinition
-    table: tags
-    name: index_tags_on_account_id_and_title
-    unique: true
-    columns:
-    - title
-    lengths: {}
-    orders: {}
-    opclasses: {}
-    where:
-    type:
-    using:
-    include:
-    nulls_not_distinct:
-    comment:
-    valid: true
+  tags: []
   user_settings:
   - !ruby/object:ActiveRecord::ConnectionAdapters::IndexDefinition
     table: user_settings
@@ -2981,6 +3096,73 @@ indexes:
     unique: false
     columns:
     - user_id
+    lengths: {}
+    orders: {}
+    opclasses: {}
+    where:
+    type:
+    using:
+    include:
+    nulls_not_distinct:
+    comment:
+    valid: true
+  webhook_delinquency_trackers:
+  - !ruby/object:ActiveRecord::ConnectionAdapters::IndexDefinition
+    table: webhook_delinquency_trackers
+    name: index_webhook_delinquency_trackers_on_webhook_id
+    unique: false
+    columns:
+    - webhook_id
+    lengths: {}
+    orders: {}
+    opclasses: {}
+    where:
+    type:
+    using:
+    include:
+    nulls_not_distinct:
+    comment:
+    valid: true
+  webhook_deliveries:
+  - !ruby/object:ActiveRecord::ConnectionAdapters::IndexDefinition
+    table: webhook_deliveries
+    name: index_webhook_deliveries_on_event_id
+    unique: false
+    columns:
+    - event_id
+    lengths: {}
+    orders: {}
+    opclasses: {}
+    where:
+    type:
+    using:
+    include:
+    nulls_not_distinct:
+    comment:
+    valid: true
+  - !ruby/object:ActiveRecord::ConnectionAdapters::IndexDefinition
+    table: webhook_deliveries
+    name: index_webhook_deliveries_on_webhook_id
+    unique: false
+    columns:
+    - webhook_id
+    lengths: {}
+    orders: {}
+    opclasses: {}
+    where:
+    type:
+    using:
+    include:
+    nulls_not_distinct:
+    comment:
+    valid: true
+  webhooks:
+  - !ruby/object:ActiveRecord::ConnectionAdapters::IndexDefinition
+    table: webhooks
+    name: index_webhooks_on_collection_id
+    unique: false
+    columns:
+    - collection_id
     lengths: {}
     orders: {}
     opclasses: {}

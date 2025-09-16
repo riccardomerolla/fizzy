@@ -419,7 +419,6 @@ ActiveRecord::Schema[8.1].define(version: 2025_09_15_170056) do
     t.datetime "created_at", null: false
     t.string "title"
     t.datetime "updated_at", null: false
-    t.index ["title"], name: "index_tags_on_account_id_and_title", unique: true
   end
 
   create_table "user_settings", force: :cascade do |t|
@@ -454,6 +453,39 @@ ActiveRecord::Schema[8.1].define(version: 2025_09_15_170056) do
     t.boolean "watching", default: true, null: false
     t.index ["card_id"], name: "index_watches_on_card_id"
     t.index ["user_id"], name: "index_watches_on_user_id"
+  end
+
+  create_table "webhook_delinquency_trackers", force: :cascade do |t|
+    t.integer "consecutive_failures_count"
+    t.datetime "created_at", null: false
+    t.datetime "first_failure_at"
+    t.datetime "updated_at", null: false
+    t.integer "webhook_id", null: false
+    t.index ["webhook_id"], name: "index_webhook_delinquency_trackers_on_webhook_id"
+  end
+
+  create_table "webhook_deliveries", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "event_id", null: false
+    t.text "request"
+    t.text "response"
+    t.string "state", null: false
+    t.datetime "updated_at", null: false
+    t.integer "webhook_id", null: false
+    t.index ["event_id"], name: "index_webhook_deliveries_on_event_id"
+    t.index ["webhook_id"], name: "index_webhook_deliveries_on_webhook_id"
+  end
+
+  create_table "webhooks", force: :cascade do |t|
+    t.boolean "active", default: true, null: false
+    t.integer "collection_id", null: false
+    t.datetime "created_at", null: false
+    t.string "name"
+    t.string "signing_secret", null: false
+    t.text "subscribed_actions"
+    t.datetime "updated_at", null: false
+    t.text "url", null: false
+    t.index ["collection_id"], name: "index_webhooks_on_collection_id"
   end
 
   create_table "workflow_stages", force: :cascade do |t|
@@ -501,6 +533,10 @@ ActiveRecord::Schema[8.1].define(version: 2025_09_15_170056) do
   add_foreign_key "user_settings", "users"
   add_foreign_key "watches", "cards"
   add_foreign_key "watches", "users"
+  add_foreign_key "webhook_delinquency_trackers", "webhooks"
+  add_foreign_key "webhook_deliveries", "events"
+  add_foreign_key "webhook_deliveries", "webhooks"
+  add_foreign_key "webhooks", "collections"
   add_foreign_key "workflow_stages", "workflows"
 
   # Virtual tables defined in this database.

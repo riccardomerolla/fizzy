@@ -1,3 +1,3 @@
 class AdminController < ApplicationController
-  include StaffOnly
+  before_action :ensure_is_staff_member
 end

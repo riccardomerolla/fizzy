@@ -8,6 +8,7 @@ class Collection < ApplicationRecord
   has_many :cards, dependent: :destroy
   has_many :tags, -> { distinct }, through: :cards
   has_many :events
+  has_many :webhooks, dependent: :destroy
   has_one :entropy_configuration, class_name: "Entropy::Configuration", as: :container, dependent: :destroy
 
   scope :alphabetically, -> { order("lower(name)") }

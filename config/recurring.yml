@@ -26,6 +26,9 @@ production: &production
   generate_weekly_highlights:
     command: "User.generate_all_weekly_highlights_later"
     schedule: every sunday at noon
+  cleanup_webhook_deliveries:
+    command: "Webhook::CleanupDeliveriesJob"
+    schedule: every 4 hours
 
 beta: *production
 staging: *production

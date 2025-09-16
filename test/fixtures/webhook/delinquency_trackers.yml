@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+active_webhook_tracker:
+  webhook: active
+  consecutive_failures_count: 1
+  first_failure_at: <%= 1.hour.ago %>
+
+inactive_webhook_tracker:
+  webhook: inactive
+  consecutive_failures_count: 1
+  first_failure_at: <%= 1.hour.ago %>

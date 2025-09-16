@@ -1,6 +1,5 @@
 class Conversations::MessagesController < ApplicationController
-  include StaffOnly
-
+  before_action :ensure_is_staff_member
   before_action :set_conversation
 
   def index

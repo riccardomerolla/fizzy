@@ -18,7 +18,7 @@ module User::Role
     admin? || other == self
   end
 
-  def can_administer?(other)
+  def can_administer?(other = nil)
     admin? && other != self
   end
 end
