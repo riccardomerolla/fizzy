@@ -1,6 +1,7 @@
 <section id="the-stream" class="cards cards--considering"
   data-action="turbo:before-morph-attribute->collapsible-columns#preventToggle">
-  <div class="cards__decoration"></div>
+
+  <%= render "collections/columns/pinstripes" %>
 
   <header class="cards__expander">
     <h2 class="cards__expander-title position-relative"">The Stream</h2>
@@ -11,6 +12,4 @@
       <%= render "public/collections/columns/list", cards: page.records %>
     <% end %>
   <% end %>
-
-  <div class="cards__decoration-end"></div>
 </section>

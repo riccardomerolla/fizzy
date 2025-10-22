@@ -29,7 +29,6 @@ ActiveRecord::Schema[8.2].define(version: 2025_10_16_153034) do
     t.integer "external_account_id"
     t.string "join_code"
     t.string "name", null: false
-    t.string "setup_status"
     t.datetime "updated_at", null: false
     t.index ["external_account_id"], name: "index_accounts_on_external_account_id", unique: true
   end
@@ -288,15 +287,6 @@ ActiveRecord::Schema[8.2].define(version: 2025_10_16_153034) do
     t.index ["tag_id"], name: "index_filters_tags_on_tag_id"
   end
 
-  create_table "integrations", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.text "data"
-    t.integer "owner_id", null: false
-    t.string "type"
-    t.datetime "updated_at", null: false
-    t.index ["owner_id"], name: "index_integrations_on_owner_id"
-  end
-
   create_table "mentions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "mentionee_id", null: false
@@ -526,7 +516,6 @@ ActiveRecord::Schema[8.2].define(version: 2025_10_16_153034) do
   add_foreign_key "conversation_messages", "conversations"
   add_foreign_key "conversations", "users"
   add_foreign_key "events", "collections"
-  add_foreign_key "integrations", "users", column: "owner_id"
   add_foreign_key "mentions", "users", column: "mentionee_id"
   add_foreign_key "mentions", "users", column: "mentioner_id"
   add_foreign_key "notification_bundles", "users"

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_10_07_112917) do
+ActiveRecord::Schema[8.2].define(version: 2025_10_07_112917) do
   create_table "identities", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

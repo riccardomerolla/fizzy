@@ -34,6 +34,15 @@ step() {
   return $exit_code
 }
 
+needs_seeding() {
+  has_tenant=$(bin/rails runner "pp ApplicationRecord.tenants.any? { ApplicationRecord.with_tenant(_1) { Account.sole } }" 2>/dev/null)
+  if [ "$has_tenant" = "true" ] ; then
+    return 1
+  else
+    return 0
+  fi
+}
+
 echo
 gum style --foreground 153        "   ˚ ∘             ∘ ˚   "
 gum style --foreground 111 --bold "  ∘˚˳°∘°  𝒻𝒾𝓏𝓏𝓎  °∘°˳˚∘  "
@@ -60,6 +69,8 @@ fi
 
 if [[ $* == *--reset* ]]; then
   step "Resetting the database" rails db:reset
+elif needs_seeding; then
+  step "Setting up the database" rails db:reset
 else
   step "Preparing the database" rails db:prepare
 fi

@@ -7,7 +7,7 @@ class ControllerAuthenticationTest < ActionDispatch::IntegrationTest
     get cards_path
 
     assert_response :success
-    assert_dom "p", text: "You don't have any existing Fizzy accounts."
+    assert_dom "p", text: "You don't have any existing Boxcar accounts."
   end
 
   test "access with an account slug but no session redirects to new session" do

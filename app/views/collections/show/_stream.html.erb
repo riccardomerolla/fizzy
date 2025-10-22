@@ -2,7 +2,8 @@
   data-drag-and-drop-target="container"
   data-action="turbo:before-morph-attribute->collapsible-columns#preventToggle"
   data-drag-and-drop-url="<%= columns_card_drops_stream_path("__id__") %>">
-  <div class="cards__decoration"></div>
+
+  <%= render "collections/columns/pinstripes" %>
 
   <header class="cards__expander">
     <h2 class="cards__expander-title position-relative">The Stream</h2>
@@ -19,6 +20,4 @@
       <%= render "collections/columns/list", cards: page.records, draggable: true %>
     <% end %>
   <% end %>
-
-  <div class="cards__decoration-end"></div>
 </section>

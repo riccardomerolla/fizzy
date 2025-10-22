@@ -39,6 +39,6 @@ class Conversation::Message::ResponseGeneratorJobTest < ActiveJob::TestCase
 
     last_message = conversation.messages.ordered.last
     assert last_message.assistant?
-    assert_match(/Fizzy is very busy/i, last_message.content.to_plain_text)
+    assert_match(/Boxcar is very busy/i, last_message.content.to_plain_text)
   end
 end

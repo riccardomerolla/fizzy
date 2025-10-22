@@ -60,7 +60,7 @@ class NotificationPusher
         )
       when "card_closed"
         base_payload.merge(
-          body: card.closure ? "Marked as “Done” by #{event.creator.name}" : "Closed by #{event.creator.name}"
+          body: card.closure ? "Moved to Done by #{event.creator.name}" : "Closed by #{event.creator.name}"
         )
       when "card_reopened"
         base_payload.merge(

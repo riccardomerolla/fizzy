@@ -24,6 +24,7 @@
     margin-inline: auto;
     max-inline-size: var(--main-width);
     overflow-x: auto;
+    overflow-y: hidden;
     position: relative;
 
     /* When it has something expanded */
@@ -65,7 +66,7 @@
     inline-size: var(--column-width-expanded);
     position: relative;
     scroll-snap-align: start;
-    transition: inline-size 200ms ease-out;
+    transition: inline-size 300ms ease-out;
     will-change: inline-size;
 
     .no-transitions & {
@@ -101,7 +102,9 @@
   /* The wrapper around the cards used to clip overflow while transitioning.
    * Also, don't resize cards while transitioning to avoid reflow. */
   .cards__list {
-    display: grid;
+    align-items: flex-end; /* use flex-start to wipe from left */
+    display: flex;
+    flex-direction: column;
     gap: var(--cards-gap);
     margin-block-start: -1ch;
     margin-inline: -1ch;
@@ -462,91 +465,10 @@
   /* ------------------------------------------------------------------------ */
 
   .cards--considering {
-    --gradient-opacity: 25%;
-    --bottom-gradient-size: 4em;
-
-    padding-bottom: var(--bottom-gradient-size);
     position: relative;
-
-    @supports(mask: linear-gradient(black)) {
-      &:before {
-        background-image: linear-gradient(90deg,
-          transparent 0%,
-          color-mix(in srgb, var(--color-considering) var(--gradient-opacity), transparent) 33%,
-          color-mix(in srgb, var(--color-considering) var(--gradient-opacity), transparent) 66%,
-          transparent 100%);
-        content: "";
-        inset: calc(var(--column-width-collapsed) + var(--block-space-half)) 0 0 0;
-        position: absolute;
-        z-index: 0;
-      }
-
-      &:after {
-        background: linear-gradient(90deg,
-          color-mix(in oklch, var(--color-considering) 0%, transparent) 0%,
-          color-mix(in oklch, var(--color-considering) 20%, transparent) 25%,
-          color-mix(in oklch, var(--color-considering) 20%, transparent) 50%,
-          color-mix(in oklch, var(--color-considering) 0%, transparent) 100%);
-        content: "";
-        inset: calc(var(--column-width-collapsed) + var(--block-space-half)) 0 0 0;
-        mask: var(--wavy-background-mask);
-        position: absolute;
-        z-index: -1;
-      }
-    }
 
     @media (min-width: 640px) {
       padding-inline: var(--cards-gap);
-    }
-
-    @media (prefers-color-scheme: dark) {
-      --gradient-opacity: 10%;
-    }
-
-    .cards__decoration {
-      --gradient-opacity: 30%;
-      --size: 2.2em;
-
-      background-color: var(--color-canvas);
-      background-image: radial-gradient(ellipse at bottom,
-        color-mix(in srgb, var(--color-considering) var(--gradient-opacity), transparent) 0%,
-        transparent 70%);
-      block-size: var(--size);
-      inline-size: 100%;
-      inset: calc(var(--column-width-collapsed) + var(--block-space) - var(--size)) 0 auto 0;
-      position: absolute;
-      z-index: -1;
-
-      @media (prefers-color-scheme: dark) {
-        --gradient-opacity: 15%;
-      }
-
-      @supports(mask: radial-gradient(black)) {
-        --gradient-opacity: 30%;
-
-        &:before {
-          background: radial-gradient(ellipse at bottom,
-            color-mix(in srgb, var(--color-considering) var(--gradient-opacity), transparent) 0%,
-            transparent 70%);
-          content: "";
-          inset: 0;
-          mask: radial-gradient(6px at 50% calc(100% + 3px),
-                                transparent calc(99% - 2px),
-                                black calc(101% - 2px) 99%, transparent 101%) calc(50% - 8px) calc(50% - 3px + .5px)/16px 6px,
-                radial-gradient(6px at 50% -3px, transparent calc(99% - 2px), black calc(101% - 2px) 99%, transparent 101%) 50% calc(50% + 3px)/16px 6px;
-          position: absolute;
-          z-index: 0;
-        }
-      }
-    }
-
-    .cards__decoration-end {
-      background: linear-gradient( transparent 0%, var(--color-canvas) 90%);
-      block-size: var(--bottom-gradient-size);
-      content: "";
-      inset: auto 0 0;
-      position: absolute;
-      z-index: 1;
     }
 
     .card {
@@ -587,6 +509,59 @@
     .card__title {
       min-block-size: 0;
     }
+  }
+
+  /* Pinstripes
+  /* -------------------------------------------------------------------------- */
+
+  .pinstripes {
+    --pinstripe-color: oklch(var(--lch-blue-light));
+    --pinstripe-spacing: 5px;
+
+    background: repeating-linear-gradient(
+      90deg,
+      var(--pinstripe-color),
+      var(--pinstripe-color) 1px,
+      transparent 1px,
+      transparent var(--pinstripe-spacing)
+    );
+    inset: -24px 0;
+    overflow: hidden;
+    position: absolute;
+
+    /* Fade */
+    &:before,
+    &:after {
+      background: radial-gradient(
+        circle at center bottom,
+        transparent,
+        transparent 65%,
+        var(--color-canvas) 70%,
+        var(--color-canvas)
+      );
+      block-size: 480px;
+      inline-size: 200%;
+      content: "";
+      inset: 0;
+      position: absolute;
+      translate: -25% 0;
+    }
+
+    &:after {
+      inset-block: auto 0;
+      rotate: 180deg;
+    }
+  }
+
+  .pinstripes--alt {
+    --pinstripe-spacing: 10px; /* 2x previous spacing value */
+  }
+
+  .pinstripes__fade {
+    background: linear-gradient(to right, var(--color-canvas), transparent 10%, transparent 90%, var(--color-canvas));
+    content: "";
+    inset: 0;
+    position: absolute;
   }
 
   /* Collection tools

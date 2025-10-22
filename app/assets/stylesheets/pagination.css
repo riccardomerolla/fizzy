@@ -23,4 +23,11 @@
       }
     }
   }
+
+  .day-timeline-pagination-link {
+    block-size: 1px;
+    display: block;
+    inline-size: 1px;
+    overflow: clip;
+  }
 }
