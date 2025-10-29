@@ -12,9 +12,6 @@ class Webhook < ApplicationRecord
     card_postponed
     card_auto_postponed
     card_collection_changed
-    card_due_date_added
-    card_due_date_changed
-    card_due_date_removed
     card_published
     card_reopened
     card_sent_back_to_triage
