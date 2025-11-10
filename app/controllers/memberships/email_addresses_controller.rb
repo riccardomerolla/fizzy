@@ -1,5 +1,5 @@
 class Memberships::EmailAddressesController < ApplicationController
-  require_untenanted_access
+  disallow_account_scope
 
   layout "public"
 

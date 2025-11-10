@@ -1,5 +1,5 @@
 class Sessions::MenusController < ApplicationController
-  require_untenanted_access
+  disallow_account_scope
 
   before_action(if: :render_as_menu_section?) { request.variant = :menu_section }
 

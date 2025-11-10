@@ -2,10 +2,9 @@ module Authentication
   extend ActiveSupport::Concern
 
   included do
-    # Checking for tenant must happen first so we redirect before trying to access the db.
-    before_action :require_tenant
     prepend_before_action :clear_old_scoped_session_cookies
 
+    before_action :require_account # Checking and setting account must happen first
     before_action :require_authentication
     helper_method :authenticated?
 
@@ -26,8 +25,8 @@ module Authentication
       allow_unauthorized_access **options
     end
 
-    def require_untenanted_access(**options)
-      skip_before_action :require_tenant, **options
+    def disallow_account_scope(**options)
+      skip_before_action :require_account, **options
       before_action :redirect_tenanted_request, **options
     end
   end
@@ -37,9 +36,11 @@ module Authentication
       Current.session.present?
     end
 
-    def require_tenant
-      if ApplicationRecord.current_tenant.blank?
+    def require_account
+      if request_account_id.blank?
         redirect_to session_menu_url(script_name: nil)
+      else
+        set_current_account
       end
     end
 
@@ -81,7 +82,7 @@ module Authentication
     end
 
     def redirect_tenanted_request
-      redirect_to root_url if ApplicationRecord.current_tenant
+      redirect_to root_url if request_account_id
     end
 
     def start_new_session_for(identity)
@@ -99,6 +100,10 @@ module Authentication
     def terminate_session
       Current.session.destroy
       cookies.delete(:session_token)
+    end
+
+    def set_current_account
+      Current.account = Account.find_by(external_account_id: request_account_id)
     end
 
     def request_account_id

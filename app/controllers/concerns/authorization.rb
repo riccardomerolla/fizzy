@@ -2,7 +2,6 @@ module Authorization
   extend ActiveSupport::Concern
 
   included do
-    prepend_before_action :set_account, if: -> { request_account_id.present? }
     before_action :ensure_can_access_account, if: -> { Current.account.present? && authenticated? }
   end
 
@@ -18,10 +17,6 @@ module Authorization
   end
 
   private
-    def set_account
-      Current.account = Account.find_by(external_account_id: request_account_id)
-    end
-
     def ensure_admin
       head :forbidden unless Current.user.admin?
     end

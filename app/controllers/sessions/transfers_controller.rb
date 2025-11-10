@@ -1,5 +1,5 @@
 class Sessions::TransfersController < ApplicationController
-  require_untenanted_access
+  disallow_account_scope
   require_unauthenticated_access
 
   def show

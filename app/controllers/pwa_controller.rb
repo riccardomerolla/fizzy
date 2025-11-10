@@ -1,5 +1,5 @@
 class PwaController < ApplicationController
-  require_untenanted_access
+  disallow_account_scope
   skip_forgery_protection
 
   # We need a stable URL at the root, so we can't use the regular asset path here.

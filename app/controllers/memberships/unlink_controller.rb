@@ -1,5 +1,5 @@
 class Memberships::UnlinkController < ApplicationController
-  require_untenanted_access
+  disallow_account_scope
   before_action :set_membership
 
   def show

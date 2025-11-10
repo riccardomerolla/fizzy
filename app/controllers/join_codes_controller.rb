@@ -1,5 +1,5 @@
 class JoinCodesController < ApplicationController
-  require_untenanted_access
+  disallow_account_scope
   allow_unauthenticated_access
   before_action :set_join_code
   before_action :ensure_join_code_is_valid
@@ -7,7 +7,8 @@ class JoinCodesController < ApplicationController
   layout "public"
 
   def new
-    @account_name = Current.account.name
+    @account = Account.find_by_external_account_id!(tenant)
+    @account_name = @account.name
   end
 
   def create
