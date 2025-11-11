@@ -19,20 +19,6 @@ module Mentions
 
   private
     def scan_mentionees
-      mentionees_from_plain_text | mentionees_from_rich_text
-    end
-
-    def mentionees_from_plain_text
-      scan_mentioned_handles.filter_map do |mention|
-        mentionable_users.find { |user| user.mentionable_handles.include?(mention) }
-      end
-    end
-
-    def scan_mentioned_handles
-      mentionable_content.scan(/(?<!\w)@(\w+)/).flatten.uniq(&:downcase)
-    end
-
-    def mentionees_from_rich_text
       mentionees_from_attachments & mentionable_users
     end
 
