@@ -3,7 +3,7 @@ class Cards::TaggingsController < ApplicationController
 
   def new
     @tags = Tag.all.alphabetically
-    fresh_when @tags
+    fresh_when etag: [ @tags, @card.tags ]
   end
 
   def create
