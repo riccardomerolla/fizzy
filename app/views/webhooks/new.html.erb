@@ -2,7 +2,7 @@
 
 <% content_for :header do %>
   <div class="header__actions header__actions--start">
-    <%= back_link_to "Webhooks", board_webhooks_path, "keydown.left@document->hotkey#click" %>
+    <%= back_link_to "Webhooks", board_webhooks_path, "keydown.left@document->hotkey#click keydown.esc@document->hotkey#click" %>
   </div>
 
   <h1 class="header__title"><%= @page_title %></h1>
