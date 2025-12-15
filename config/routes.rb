@@ -9,11 +9,14 @@ Rails.application.routes.draw do
   end
 
   # CSSD domain routes
+  resource :dashboard, only: :show
+  
   resources :sites do
     resources :csv_imports, only: [ :new, :create ]
   end
 
   resources :csv_imports, only: [ :index, :show ]
+  resources :reprocessing_cycles, only: [ :index, :show ]
 
   resources :users do
     scope module: :users do
