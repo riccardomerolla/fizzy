@@ -8,6 +8,13 @@ Rails.application.routes.draw do
     resources :exports, only: [ :create, :show ]
   end
 
+  # CSSD domain routes
+  resources :sites do
+    resources :csv_imports, only: [ :new, :create ]
+  end
+
+  resources :csv_imports, only: [ :index, :show ]
+
   resources :users do
     scope module: :users do
       resource :avatar

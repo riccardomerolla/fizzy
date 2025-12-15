@@ -1,0 +1,86 @@
+<% @page_title = "CSV Import Details" %>
+
+<div class="panel panel--centered">
+  <div class="flex gap justify-between align-center margin-block-end">
+    <h1 class="txt-x-large margin-none font-weight-black"><%= @page_title %></h1>
+    <%= link_to "Back to Imports", csv_imports_path, class: "btn" %>
+  </div>
+
+  <div class="flex flex-column gap margin-block-start">
+    <div class="flex gap justify-between">
+      <strong>Site:</strong>
+      <span><%= @csv_import.site.name %></span>
+    </div>
+
+    <div class="flex gap justify-between">
+      <strong>Filename:</strong>
+      <code><%= @csv_import.original_filename %></code>
+    </div>
+
+    <div class="flex gap justify-between">
+      <strong>Status:</strong>
+      <span class="badge badge--<%= @csv_import.status %>">
+        <%= @csv_import.status.titleize %>
+      </span>
+    </div>
+
+    <div class="flex gap justify-between">
+      <strong>Total Rows:</strong>
+      <span><%= @csv_import.row_count %></span>
+    </div>
+
+    <div class="flex gap justify-between">
+      <strong>Processed:</strong>
+      <span class="txt-green"><%= @csv_import.processed_count %></span>
+    </div>
+
+    <div class="flex gap justify-between">
+      <strong>Rejected:</strong>
+      <span class="txt-red"><%= @csv_import.rejected_count %></span>
+    </div>
+
+    <div class="flex gap justify-between">
+      <strong>Success Rate:</strong>
+      <span><%= number_to_percentage(@csv_import.success_rate, precision: 1) %></span>
+    </div>
+
+    <div class="flex gap justify-between">
+      <strong>Created:</strong>
+      <span><%= time_tag @csv_import.created_at %></span>
+    </div>
+
+    <% if @csv_import.error_message.present? %>
+      <div class="flash flash--error margin-block-start">
+        <strong>Error:</strong> <%= @csv_import.error_message %>
+      </div>
+    <% end %>
+  </div>
+
+  <% if @errors.any? %>
+    <h2 class="txt-large margin-block-start-large">Import Errors</h2>
+    <table class="full-width margin-block-start">
+      <thead>
+        <tr>
+          <th>Row</th>
+          <th>Error Message</th>
+          <th>Raw Data</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @errors.each do |error| %>
+          <tr>
+            <td><%= error.row_number %></td>
+            <td><%= error.message %></td>
+            <td><code class="txt-small"><%= error.raw_row.to_json %></code></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <% if @csv_import.completed? %>
+      <div class="flash flash--success margin-block-start-large">
+        All rows processed successfully!
+      </div>
+    <% end %>
+  <% end %>
+</div>

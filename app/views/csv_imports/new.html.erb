@@ -1,0 +1,37 @@
+<% @page_title = "Import CSV - #{@site.name}" %>
+
+<div class="panel panel--centered">
+  <%= form_with model: @csv_import, url: site_csv_imports_path(@site), class: "flex flex-column gap" do |form| %>
+    <h1 class="txt-x-large margin-none font-weight-black"><%= @page_title %></h1>
+
+    <% if @csv_import.errors.any? %>
+      <div class="flash flash--error">
+        <ul>
+          <% @csv_import.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="flex flex-column gap-small">
+      <%= form.label :file, "CSV File" %>
+      <%= form.file_field :file, required: true, accept: ".csv,text/csv", class: "input full-width" %>
+      <small class="txt-small">
+        Upload a CSV file with reprocessing cycle data.
+        <%= link_to "Download sample CSV", "/docs/sample_import.csv" %>
+      </small>
+    </div>
+
+    <div class="flash flash--info margin-block-start">
+      <strong>Required columns:</strong> site_code, cycle_barcode, catalog_barcode, received_at, sterilized_at, status
+      <br>
+      <strong>Optional columns:</strong> washed_at, packed_at, delivered_at, nonconform_kind, nonconform_notes
+    </div>
+
+    <div class="flex gap margin-block-start">
+      <%= form.submit "Upload and Process", class: "btn btn--primary" %>
+      <%= link_to "Cancel", csv_imports_path, class: "btn" %>
+    </div>
+  <% end %>
+</div>
