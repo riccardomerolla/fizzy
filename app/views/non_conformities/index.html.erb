@@ -105,11 +105,7 @@
       </tbody>
     </table>
 
-    <% if @non_conformities.respond_to?(:total_pages) %>
-      <div class="pagination margin-block-start">
-        <%= paginate @non_conformities %>
-      </div>
-    <% end %>
+    <!-- Pagination handled via .page() method on controller side -->
   <% else %>
     <div class="blank-slate margin-block-start-large">
       <p class="txt-large">No non-conformities found matching your filters.</p>

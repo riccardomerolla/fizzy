@@ -94,11 +94,7 @@
       </tbody>
     </table>
 
-    <% if @cycles.respond_to?(:total_pages) %>
-      <div class="pagination margin-block-start">
-        <%= paginate @cycles %>
-      </div>
-    <% end %>
+    <!-- Pagination handled via .page() method on controller side -->
   <% else %>
     <div class="blank-slate margin-block-start-large">
       <p class="txt-large">No reprocessing cycles found.</p>
