@@ -187,12 +187,12 @@ bin/dev
 ## Known Limitations & Notes
 
 ### Pagination
-Views use `.page()` method assuming Kaminari gem. Options:
-1. **Add Kaminari:** `gem 'kaminari'` in Gemfile
-2. **Use will_paginate:** Already in Gemfile? Check and update views
-3. **Simple pagination:** Use `limit/offset` without gem
+Views use `.page()` method which is provided by the `geared_pagination` gem (already in Gemfile). The gem provides:
+- `.page(page_num)` method on ActiveRecord relations
+- `total_pages` method for checking if pagination is needed
+- Standard pagination helpers
 
-Current code assumes pagination is available. If not installed, lists will show all records (fine for MVP with small datasets).
+The implementation is consistent with existing Fizzy patterns and should work out of the box.
 
 ### Money Formatting
 Views use `number_to_currency(cents / 100.0)` for display. Works without Money gem.

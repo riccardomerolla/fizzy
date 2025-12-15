@@ -105,8 +105,8 @@
       </tbody>
     </table>
 
-    <% if @non_conformities.respond_to?(:total_pages) && @non_conformities.total_pages > 1 %>
-      <div class="margin-block-start flex justify-center">
+    <% if @non_conformities.respond_to?(:total_pages) %>
+      <div class="pagination margin-block-start">
         <%= paginate @non_conformities %>
       </div>
     <% end %>
