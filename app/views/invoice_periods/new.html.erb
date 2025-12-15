@@ -1,0 +1,55 @@
+<% @page_title = "Compute Invoice" %>
+
+<div class="panel panel--centered">
+  <h1 class="txt-x-large margin-none font-weight-black margin-block-end"><%= @page_title %></h1>
+
+  <div class="panel panel--inset margin-block-end">
+    <h2 class="txt-large margin-none margin-block-end-small">Contract: <%= @contract.name %></h2>
+    <p class="txt-muted margin-none">
+      Site: <%= @contract.site&.name || "All Sites" %><br>
+      Price per set: <%= number_to_currency(@contract.price_per_set_cents / 100.0) %><br>
+      Exclude nonconform: <%= @contract.exclude_nonconform? ? "Yes" : "No" %><br>
+      <% if @contract.sla_turnaround_hours.present? %>
+        SLA: <%= @contract.sla_turnaround_hours %> hours (Penalty: <%= number_to_currency((@contract.penalty_per_breach_cents || 0) / 100.0) %>)
+      <% else %>
+        SLA: Not configured
+      <% end %>
+    </p>
+  </div>
+
+  <%= form_with model: @invoice_period, url: contract_invoice_periods_path(@contract), class: "flex flex-column gap" do |form| %>
+    <% if @invoice_period.errors.any? %>
+      <div class="panel panel--inset panel--danger">
+        <h2 class="txt-large margin-none margin-block-end-small"><%= pluralize(@invoice_period.errors.count, "error") %> prevented this invoice from being computed:</h2>
+        <ul class="margin-none">
+          <% @invoice_period.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="flex gap">
+      <div class="flex flex-column gap-small flex-1">
+        <%= form.label :year, "Year" %>
+        <%= form.number_field :year, class: "input", min: 2020, max: 2050 %>
+      </div>
+
+      <div class="flex flex-column gap-small flex-1">
+        <%= form.label :month, "Month" %>
+        <%= form.select :month, 
+            options_for_select((1..12).map { |m| [Date::MONTHNAMES[m], m] }, @invoice_period.month),
+            {}, class: "input" %>
+      </div>
+    </div>
+
+    <p class="txt-small txt-muted">
+      The invoice will be computed based on reprocessing cycles with <strong>sterilized_at</strong> timestamps in the selected month.
+    </p>
+
+    <div class="flex gap">
+      <%= form.submit "Compute Invoice", class: "btn btn--primary" %>
+      <%= link_to "Cancel", contract_invoice_periods_path(@contract), class: "btn" %>
+    </div>
+  <% end %>
+</div>

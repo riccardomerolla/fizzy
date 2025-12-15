@@ -1,0 +1,59 @@
+<% @page_title = "Edit Contract" %>
+
+<div class="panel panel--centered">
+  <h1 class="txt-x-large margin-none font-weight-black margin-block-end"><%= @page_title %></h1>
+
+  <%= form_with model: @contract, class: "flex flex-column gap" do |form| %>
+    <% if @contract.errors.any? %>
+      <div class="panel panel--inset panel--danger">
+        <h2 class="txt-large margin-none margin-block-end-small"><%= pluralize(@contract.errors.count, "error") %> prevented this contract from being saved:</h2>
+        <ul class="margin-none">
+          <% @contract.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="flex flex-column gap-small">
+      <%= form.label :name, "Contract Name" %>
+      <%= form.text_field :name, class: "input", placeholder: "e.g., Main Hospital Contract" %>
+    </div>
+
+    <div class="flex flex-column gap-small">
+      <%= form.label :site_id, "Site (optional)" %>
+      <%= form.select :site_id, 
+          options_for_select([["Default (All Sites)", ""]] + Current.account.sites.pluck(:name, :id), @contract.site_id),
+          {}, class: "input" %>
+      <p class="txt-small txt-muted">Leave empty for account-wide default contract</p>
+    </div>
+
+    <div class="flex flex-column gap-small">
+      <%= form.label :price_per_set_cents, "Price per Set (cents)" %>
+      <%= form.number_field :price_per_set_cents, class: "input", placeholder: "e.g., 500 for $5.00" %>
+      <p class="txt-small txt-muted">Price in cents (e.g., 500 = $5.00)</p>
+    </div>
+
+    <div class="flex gap-small align-center">
+      <%= form.check_box :exclude_nonconform, class: "input" %>
+      <%= form.label :exclude_nonconform, "Exclude non-conforming cycles from billing" %>
+    </div>
+
+    <div class="flex flex-column gap-small">
+      <%= form.label :sla_turnaround_hours, "SLA Turnaround (hours)" %>
+      <%= form.number_field :sla_turnaround_hours, class: "input", placeholder: "e.g., 24" %>
+      <p class="txt-small txt-muted">Leave empty if no SLA applies</p>
+    </div>
+
+    <div class="flex flex-column gap-small">
+      <%= form.label :penalty_per_breach_cents, "Penalty per SLA Breach (cents)" %>
+      <%= form.number_field :penalty_per_breach_cents, class: "input", placeholder: "e.g., 100 for $1.00" %>
+      <p class="txt-small txt-muted">Leave empty if no penalty applies</p>
+    </div>
+
+    <div class="flex gap">
+      <%= form.submit "Update Contract", class: "btn btn--primary" %>
+      <%= link_to "Cancel", contracts_path, class: "btn" %>
+    </div>
+  <% end %>
+</div>

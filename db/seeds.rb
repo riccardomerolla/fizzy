@@ -56,4 +56,5 @@ else
   seed_account "cleanslate"
   seed_account "37signals"
   seed_account "honcho"
+  seed_account "cssd"
 end

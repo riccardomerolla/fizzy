@@ -1,0 +1,97 @@
+<% @page_title = "Invoice - #{Date.new(@invoice_period.year, @invoice_period.month, 1).strftime("%B %Y")}" %>
+
+<div class="panel panel--wide">
+  <div class="flex gap justify-between align-center margin-block-end">
+    <div>
+      <h1 class="txt-x-large margin-none font-weight-black"><%= @page_title %></h1>
+      <p class="txt-muted margin-block-start-small">Contract: <%= @invoice_period.contract.name %></p>
+    </div>
+    <div class="flex gap">
+      <%= button_to "Recompute", recompute_invoice_period_path(@invoice_period), class: "btn" %>
+      <%= link_to "Print", invoice_period_path(@invoice_period, format: :pdf), class: "btn", target: "_blank", data: { turbo: false } %>
+    </div>
+  </div>
+
+  <%= link_to "← Back to Invoices", contract_invoice_periods_path(@invoice_period.contract), class: "btn btn--small margin-block-end" %>
+
+  <!-- Contract Information -->
+  <div class="panel panel--inset margin-block-end-large">
+    <h2 class="txt-x-large margin-none margin-block-end">Contract Details</h2>
+    <div class="grid grid--2-columns gap">
+      <div>
+        <p class="txt-small txt-muted margin-none">Contract Name</p>
+        <p class="txt-large margin-none"><strong><%= @invoice_period.contract.name %></strong></p>
+      </div>
+      <div>
+        <p class="txt-small txt-muted margin-none">Site</p>
+        <p class="txt-large margin-none"><%= @invoice_period.contract.site&.name || "All Sites" %></p>
+      </div>
+      <div>
+        <p class="txt-small txt-muted margin-none">Price per Set</p>
+        <p class="txt-large margin-none"><%= number_to_currency(@invoice_period.contract.price_per_set_cents / 100.0) %></p>
+      </div>
+      <div>
+        <p class="txt-small txt-muted margin-none">Exclude Nonconform</p>
+        <p class="txt-large margin-none"><%= @invoice_period.contract.exclude_nonconform? ? "Yes" : "No" %></p>
+      </div>
+      <% if @invoice_period.contract.sla_turnaround_hours.present? %>
+        <div>
+          <p class="txt-small txt-muted margin-none">SLA Turnaround</p>
+          <p class="txt-large margin-none"><%= @invoice_period.contract.sla_turnaround_hours %> hours</p>
+        </div>
+        <div>
+          <p class="txt-small txt-muted margin-none">Penalty per Breach</p>
+          <p class="txt-large margin-none"><%= number_to_currency((@invoice_period.contract.penalty_per_breach_cents || 0) / 100.0) %></p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <!-- Invoice Summary -->
+  <div class="panel panel--inset margin-block-end-large">
+    <h2 class="txt-x-large margin-none margin-block-end">Invoice Summary</h2>
+    <table class="full-width">
+      <tbody>
+        <tr>
+          <td class="txt-large">Total Cycles Processed</td>
+          <td class="txt-large txt-right"><strong><%= @invoice_period.processed_count %></strong></td>
+        </tr>
+        <tr>
+          <td class="txt-large">Non-Conforming Cycles</td>
+          <td class="txt-large txt-right txt-red"><%= @invoice_period.nonconform_count %></td>
+        </tr>
+        <tr>
+          <td class="txt-large">Billable Cycles</td>
+          <td class="txt-large txt-right txt-green"><strong><%= @invoice_period.billable_count %></strong></td>
+        </tr>
+        <tr class="border-block-start">
+          <td class="txt-large">Subtotal</td>
+          <td class="txt-large txt-right"><%= number_to_currency(@invoice_period.subtotal_cents / 100.0) %></td>
+        </tr>
+        <% if @invoice_period.sla_breach_count > 0 %>
+          <tr>
+            <td class="txt-large">SLA Breaches (<%= @invoice_period.sla_breach_count %>)</td>
+            <td class="txt-large txt-right txt-red">-<%= number_to_currency(@invoice_period.penalties_cents / 100.0) %></td>
+          </tr>
+        <% end %>
+        <tr class="border-block-start">
+          <td class="txt-xx-large"><strong>Total Amount</strong></td>
+          <td class="txt-xx-large txt-right"><strong><%= number_to_currency(@invoice_period.total_cents / 100.0) %></strong></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Computation Info -->
+  <div class="panel panel--inset">
+    <p class="txt-small txt-muted margin-none">
+      <strong>Computed:</strong> <%= @invoice_period.computed_at ? time_tag(@invoice_period.computed_at, format: :long) : "Never" %><br>
+      <strong>Calculation:</strong> Billable count (<%= @invoice_period.billable_count %>) × 
+      Price per set (<%= number_to_currency(@invoice_period.contract.price_per_set_cents / 100.0) %>) 
+      <% if @invoice_period.penalties_cents > 0 %>
+        - SLA penalties (<%= number_to_currency(@invoice_period.penalties_cents / 100.0) %>)
+      <% end %>
+      = <%= number_to_currency(@invoice_period.total_cents / 100.0) %>
+    </p>
+  </div>
+</div>
