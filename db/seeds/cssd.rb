@@ -65,10 +65,13 @@ if File.exist?(csv_file)
   )
   
   # Process the CSV synchronously for seed data
-  service = CsvImports::ParseAndUpsert.new(csv_import)
-  service.call
-  
-  puts "  ✓ Loaded #{csv_import.processed_count} cycles from CSV"
+  begin
+    service = CsvImports::ParseAndUpsert.new(csv_import)
+    service.call
+    puts "  ✓ Loaded #{csv_import.processed_count} cycles from CSV"
+  rescue => e
+    puts "  ⚠ Could not process CSV: #{e.message}"
+  end
 else
   puts "  Sample CSV not found, skipping data load"
 end

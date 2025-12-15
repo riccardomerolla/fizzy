@@ -8,7 +8,7 @@
     </div>
     <div class="flex gap">
       <%= button_to "Recompute", recompute_invoice_period_path(@invoice_period), class: "btn" %>
-      <%= link_to "Print", invoice_period_path(@invoice_period, format: :pdf), class: "btn", target: "_blank", data: { turbo: false } %>
+      <button onclick="window.print()" class="btn">Print</button>
     </div>
   </div>
 
