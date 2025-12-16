@@ -3,19 +3,27 @@ class ReprocessingCyclesController < ApplicationController
     @cycles = Current.account.reprocessing_cycles
       .includes(:site, :set_catalog, :non_conformities)
       .reverse_chronologically
-    
+
     # Apply filters
+    if params[:search].present?
+      search_term = "%#{params[:search]}%"
+      @cycles = @cycles.left_joins(:site, :set_catalog).where(
+        "reprocessing_cycles.cycle_barcode LIKE ? OR sites.name LIKE ? OR set_catalogs.name LIKE ?",
+        search_term, search_term, search_term
+      )
+    end
+
     @cycles = @cycles.where(site_id: params[:site_id]) if params[:site_id].present?
     @cycles = @cycles.where(status: params[:status]) if params[:status].present?
-    
+
     if params[:start_date].present? && params[:end_date].present?
       start_date = Date.parse(params[:start_date])
       end_date = Date.parse(params[:end_date])
       @cycles = @cycles.where(received_at: start_date..end_date)
     end
-    
+
     respond_to do |format|
-      format.html { @cycles = @cycles.page(params[:page]) }
+      format.html { @cycles = @cycles }
       format.csv { send_csv_export }
     end
   end

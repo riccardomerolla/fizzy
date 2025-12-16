@@ -1,11 +1,17 @@
 <% @page_title = "CSV Imports" %>
 
-<div class="panel panel--centered">
-  <div class="flex gap justify-between align-center margin-block-end">
-    <h1 class="txt-x-large margin-none font-weight-black"><%= @page_title %></h1>
-    <%= link_to "Import New CSV", sites_path, class: "btn btn--primary" %>
-  </div>
+<% content_for :header do %>
+  <h1 class="header__title divider divider--fade full-width"><%= @page_title %></h1>
 
+  <div class="header__actions header__actions--end">
+    <%= link_to sites_path, class: "btn btn--circle" do %>
+      <%= icon_tag "add" %>
+      <span class="for-screen-reader">Import New CSV</span>
+    <% end %>
+  </div>
+<% end %>
+
+<section class="panel shadow center margin-block-start-half">
   <% if @csv_imports.any? %>
     <table class="full-width margin-block-start">
       <thead>
@@ -46,7 +52,10 @@
   <% else %>
     <div class="blank-slate margin-block-start-large">
       <p class="txt-large">No CSV imports yet.</p>
-      <%= link_to "Import CSV", sites_path, class: "btn btn--primary margin-block-start" %>
+      <%= link_to sites_path, class: "btn btn--link center margin-block-start" do %>
+        <%= icon_tag "add" %>
+        <span>Import CSV</span>
+      <% end %>
     </div>
   <% end %>
-</div>
+</section>

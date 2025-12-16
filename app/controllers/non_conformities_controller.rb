@@ -22,7 +22,7 @@ class NonConformitiesController < ApplicationController
     @pareto_summary = @non_conformities.group(:kind).count.sort_by { |_k, v| -v }
     
     respond_to do |format|
-      format.html { @non_conformities = @non_conformities.page(params[:page]) }
+      format.html { @non_conformities = @non_conformities }
       format.csv { send_csv_export }
     end
   end

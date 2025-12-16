@@ -1,11 +1,17 @@
 <% @page_title = "Sites" %>
 
-<div class="panel panel--centered">
-  <div class="flex gap justify-between align-center margin-block-end">
-    <h1 class="txt-x-large margin-none font-weight-black"><%= @page_title %></h1>
-    <%= link_to "New Site", new_site_path, class: "btn btn--primary" %>
-  </div>
+<% content_for :header do %>
+  <h1 class="header__title"><%= @page_title %></h1>
 
+  <div class="header__actions header__actions--end">
+    <%= link_to new_site_path, class: "btn btn--circle" do %>
+      <%= icon_tag "add" %>
+      <span class="for-screen-reader">New Site</span>
+    <% end %>
+  </div>
+<% end %>
+
+<section class="panel shadow center margin-block-start-half">
   <% if @sites.any? %>
     <table class="full-width margin-block-start">
       <thead>
@@ -34,7 +40,10 @@
   <% else %>
     <div class="blank-slate margin-block-start-large">
       <p class="txt-large">No sites yet. Create your first site to start tracking reprocessing cycles.</p>
-      <%= link_to "Create Site", new_site_path, class: "btn btn--primary margin-block-start" %>
+      <%= link_to new_site_path, class: "btn btn--link center margin-block-start" do %>
+        <%= icon_tag "add" %>
+        <span>Create Site</span>
+      <% end %>
     </div>
   <% end %>
-</div>
+</section>

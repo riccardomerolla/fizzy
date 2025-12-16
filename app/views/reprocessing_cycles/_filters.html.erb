@@ -1,0 +1,60 @@
+<% expanded = ActiveRecord::Type::Boolean.new.cast(params[:expand_all]) %>
+<%= tag.aside class: class_names("filters margin-block-end", { "filters--expanded": expanded }),
+      data: {
+        controller: "toggle-enable toggle-class",
+        toggle_class_toggle_class: "filters--expanded",
+        turbo_permanent: true } do %>
+  <%= form_with url: reprocessing_cycles_path, method: :get, class: "display-contents", data: {
+        controller: "form",
+        action: "submit->form#submit" } do |form| %>
+    <%= hidden_field_tag :expand_all, true, disabled: !expanded, data: { toggle_enable_target: "element" } %>
+
+    <%= form.search_field :search, placeholder: "Filter cycles… [F]", value: params[:search], class: "filter__terms input txt-x-small",
+        autofocus: false, autocomplete: :off, autocorrect: "off", data: {
+              "1p-ignore": "true",
+              controller: "hotkey",
+              action: "keydown.f@document->hotkey#focus input->form#debouncedSubmit keydown.enter->form#submit blur->form#submit" } %>
+
+    <%= form.select :site_id,
+        options_for_select([["All Sites", ""]] + Current.account.sites.alphabetically.map { |s| [s.name, s.id] }, params[:site_id]),
+        {},
+        class: "btn input input--select txt-x-small filters__show-when-expanded",
+        style: "max-width: 12em;",
+        data: { action: "change->form#submit" } %>
+
+    <%= form.select :status,
+        options_for_select([["All Statuses", ""], ["Conform", "conform"], ["Non-Conform", "nonconform"]], params[:status]),
+        {},
+        class: "btn input input--select txt-x-small filters__show-when-expanded",
+        style: "max-width: 12em;",
+        data: { action: "change->form#submit" } %>
+
+    <%= form.date_field :start_date,
+        value: params[:start_date],
+        placeholder: "Start date",
+        class: "btn input input--select txt-x-small filters__show-when-expanded",
+        style: "max-width: 10em;",
+        data: { action: "change->form#submit" } %>
+
+    <%= form.date_field :end_date,
+        value: params[:end_date],
+        placeholder: "End date",
+        class: "btn input input--select txt-x-small filters__show-when-expanded",
+        style: "max-width: 10em;",
+        data: { action: "change->form#submit" } %>
+
+
+    <% if expanded %>
+      <button type="button" class="btn txt-x-small btn--reversed" aria-selected="true" data-action="toggle-class#toggle toggle-enable#toggle" data-controller="tooltip">
+        <%= icon_tag "filter" %>
+        <span class="for-screen-reader">Close filter options</span>
+      </button>
+    <% else %>
+      <button type="button" class="btn txt-x-small filter-toggle" data-action="toggle-class#toggle toggle-enable#toggle" data-controller="tooltip">
+        <%= icon_tag "filter" %>
+        <span class="filters__show-when-expanded for-screen-reader">Collapse filter options</span>
+        <span class="filters__show-when-collapsed for-screen-reader">Expand filter options</span>
+      </button>
+    <% end %>
+  <% end %>
+<% end %>

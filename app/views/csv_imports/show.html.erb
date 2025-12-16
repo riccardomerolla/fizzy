@@ -1,11 +1,14 @@
 <% @page_title = "CSV Import Details" %>
 
-<div class="panel panel--centered">
-  <div class="flex gap justify-between align-center margin-block-end">
-    <h1 class="txt-x-large margin-none font-weight-black"><%= @page_title %></h1>
-    <%= link_to "Back to Imports", csv_imports_path, class: "btn" %>
+<% content_for :header do %>
+  <div class="header__actions header__actions--start">
+    <%= back_link_to "CSV Imports", csv_imports_path, "keydown.left@document->hotkey#click keydown.esc@document->hotkey#click" %>
   </div>
 
+  <h1 class="header__title divider divider--fade full-width"><%= @page_title %></h1>
+<% end %>
+
+<section class="panel shadow center margin-block-start-half">
   <div class="flex flex-column gap margin-block-start">
     <div class="flex gap justify-between">
       <strong>Site:</strong>
@@ -50,7 +53,7 @@
     </div>
 
     <% if @csv_import.error_message.present? %>
-      <div class="flash flash--error margin-block-start">
+      <div class="panel panel--inset panel--danger margin-block-start">
         <strong>Error:</strong> <%= @csv_import.error_message %>
       </div>
     <% end %>
@@ -78,9 +81,9 @@
     </table>
   <% else %>
     <% if @csv_import.completed? %>
-      <div class="flash flash--success margin-block-start-large">
-        All rows processed successfully!
+      <div class="panel panel--inset margin-block-start-large" style="--panel-bg: oklch(var(--lch-green-lightest)); --panel-border-color: oklch(var(--lch-green-medium));">
+        <strong>Success:</strong> All rows processed successfully!
       </div>
     <% end %>
   <% end %>
-</div>
+</section>

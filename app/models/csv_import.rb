@@ -5,7 +5,7 @@ class CsvImport < ApplicationRecord
   belongs_to :site
 
   has_one_attached :file
-  has_many :errors, class_name: "CsvImportError", dependent: :destroy
+  has_many :import_errors, class_name: "CsvImportError", dependent: :destroy
 
   validates :status, presence: true, inclusion: { in: STATUSES }
   validates :original_filename, presence: true

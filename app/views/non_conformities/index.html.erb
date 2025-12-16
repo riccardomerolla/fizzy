@@ -15,8 +15,8 @@
 
       <div class="flex flex-column gap-small">
         <%= form.label :kind, "Type" %>
-        <%= form.select :kind, 
-            options_for_select([["All Types", ""]] + NonConformity.kinds.keys.map { |k| [k.titleize, k] }, params[:kind]),
+        <%= form.select :kind,
+            options_for_select([["All Types", ""]] + NonConformity::KINDS.map { |k| [k.titleize, k] }, params[:kind]),
             {}, class: "input" %>
       </div>
 

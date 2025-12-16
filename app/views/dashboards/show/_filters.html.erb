@@ -1,0 +1,20 @@
+<%= form.select :site_id,
+    options_for_select([["All Sites", ""]] + sites.map { |s| [s.name, s.id] }, selected_site&.id),
+    {},
+    class: "btn input input--select txt-x-small filters__show-when-expanded",
+    style: "max-width: 12em;",
+    data: { filter_settings_target: "field", action: "change->filter-settings#change change->form#submit" } %>
+
+<%= form.date_field :start_date,
+    value: start_date.to_date,
+    placeholder: "Start date",
+    class: "btn input input--select txt-x-small filters__show-when-expanded",
+    style: "max-width: 10em;",
+    data: { filter_settings_target: "field", action: "change->filter-settings#change change->form#submit" } %>
+
+<%= form.date_field :end_date,
+    value: end_date.to_date,
+    placeholder: "End date",
+    class: "btn input input--select txt-x-small filters__show-when-expanded",
+    style: "max-width: 10em;",
+    data: { filter_settings_target: "field", action: "change->filter-settings#change change->form#submit" } %>

@@ -144,7 +144,7 @@ class CsvImports::ParseAndUpsert
     end
 
     def record_error(row_number, message, raw_row)
-      csv_import.errors.create!(
+      csv_import.import_errors.create!(
         row_number: row_number,
         message: message,
         raw_row: raw_row.to_h

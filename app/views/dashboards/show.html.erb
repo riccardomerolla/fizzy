@@ -1,121 +1,21 @@
 <% @page_title = "CSSD Dashboard" %>
-
-<div class="panel panel--wide">
-  <h1 class="txt-x-large margin-none font-weight-black margin-block-end"><%= @page_title %></h1>
-
-  <!-- Filters -->
-  <div class="margin-block-end-large">
-    <%= form_with url: dashboard_path, method: :get, class: "flex gap align-end" do |form| %>
-      <div class="flex flex-column gap-small">
-        <%= form.label :site_id, "Site" %>
-        <%= form.select :site_id, 
-            options_for_select([["All Sites", ""]] + @sites.map { |s| [s.name, s.id] }, @selected_site&.id),
-            {}, class: "input" %>
-      </div>
-
-      <div class="flex flex-column gap-small">
-        <%= form.label :start_date, "Start Date" %>
-        <%= form.date_field :start_date, value: @start_date.to_date, class: "input" %>
-      </div>
-
-      <div class="flex flex-column gap-small">
-        <%= form.label :end_date, "End Date" %>
-        <%= form.date_field :end_date, value: @end_date.to_date, class: "input" %>
-      </div>
-
-      <%= form.submit "Apply Filters", class: "btn btn--primary" %>
-    <% end %>
+<% content_for :header do %>
+  <div class="header__actions header__actions--start">
+    <%= link_to_webhooks(Current.account) if defined?(link_to_webhooks) && Current.user&.admin? %>
   </div>
 
-  <!-- KPI Cards -->
-  <div class="grid grid--4-columns gap margin-block-end-large">
-    <!-- Volume KPI -->
-    <div class="panel panel--inset">
-      <h2 class="txt-large margin-none margin-block-end-small">Volume</h2>
-      <div class="txt-xxx-large font-weight-black"><%= number_with_delimiter(@kpis[:volume][:total]) %></div>
-      <div class="txt-small margin-block-start-small">
-        <span class="txt-green"><%= @kpis[:volume][:conform] %> conform</span> • 
-        <span class="txt-red"><%= @kpis[:volume][:nonconform] %> nonconform</span>
-      </div>
-    </div>
+  <h1 class="header__title divider divider--fade full-width">
+    <span class="overflow-ellipsis"><%= @page_title %></span>
+  </h1>
 
-    <!-- Quality KPI -->
-    <div class="panel panel--inset">
-      <h2 class="txt-large margin-none margin-block-end-small">Quality</h2>
-      <div class="txt-xxx-large font-weight-black">
-        <%= number_to_percentage(@kpis[:quality][:nonconform_percentage], precision: 1) %>
-      </div>
-      <div class="txt-small margin-block-start-small">
-        <%= @kpis[:quality][:nonconform_count] %> non-conforming cycles
-      </div>
-    </div>
-
-    <!-- Turnaround KPI -->
-    <div class="panel panel--inset">
-      <h2 class="txt-large margin-none margin-block-end-small">Turnaround</h2>
-      <div class="txt-xxx-large font-weight-black">
-        <%= number_with_precision(@kpis[:turnaround][:median_hours], precision: 1) %>h
-      </div>
-      <div class="txt-small margin-block-start-small">
-        Median • P90: <%= number_with_precision(@kpis[:turnaround][:p90_hours], precision: 1) %>h
-      </div>
-    </div>
-
-    <!-- SLA KPI -->
-    <div class="panel panel--inset">
-      <h2 class="txt-large margin-none margin-block-end-small">SLA Breaches</h2>
-      <% if @kpis[:sla][:sla_hours].present? %>
-        <div class="txt-xxx-large font-weight-black">
-          <%= @kpis[:sla][:breach_count] %>
-        </div>
-        <div class="txt-small margin-block-start-small">
-          <%= number_to_percentage(@kpis[:sla][:breach_percentage], precision: 1) %> breach rate
-          <br>
-          (SLA: <%= @kpis[:sla][:sla_hours] %>h)
-        </div>
-      <% else %>
-        <div class="txt-large">No SLA defined</div>
-        <div class="txt-small margin-block-start-small">Configure in Contracts</div>
-      <% end %>
-    </div>
+  <div class="header__actions header__actions--end">
+    <%# Placeholder to mirror boards' end actions; adjust if a dashboard edit page exists %>
   </div>
+<% end %>
 
-  <!-- Non-Conformity Breakdown -->
-  <div class="panel panel--inset margin-block-end-large">
-    <h2 class="txt-x-large margin-none margin-block-end">Non-Conformity Breakdown</h2>
-    
-    <% if @non_conformity_breakdown[:total] > 0 %>
-      <table class="full-width">
-        <thead>
-          <tr>
-            <th>Type</th>
-            <th>Count</th>
-            <th>Percentage</th>
-            <th>Visual</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @pareto_data.each do |kind, data| %>
-            <tr>
-              <td><%= kind.titleize %></td>
-              <td><%= data[:count] %></td>
-              <td><%= number_to_percentage(data[:percentage], precision: 1) %></td>
-              <td>
-                <div style="background: #e74c3c; height: 20px; width: <%= data[:percentage] %>%; max-width: 100%;"></div>
-              </td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    <% else %>
-      <p class="txt-muted">No non-conformities in selected period</p>
-    <% end %>
-  </div>
+<%= render "dashboards/show/filter_settings", filter_url: dashboard_path, user_filtering: @user_filtering, sites: @sites, selected_site: @selected_site, start_date: @start_date, end_date: @end_date %>
 
-  <!-- Quick Links -->
-  <div class="flex gap">
-    <%= link_to "View All Cycles", reprocessing_cycles_path(site_id: @selected_site&.id, start_date: @start_date.to_date, end_date: @end_date.to_date), class: "btn btn--primary" %>
-    <%= link_to "Import CSV", sites_path, class: "btn" %>
-    <%= link_to "Manage Sites", sites_path, class: "btn" %>
-  </div>
-</div>
+<%= turbo_frame_tag :cards_container do %>
+  <%= render "dashboards/show/columns" %>
+  <%= render "dashboards/show/mobile_columns" %>
+<% end %>

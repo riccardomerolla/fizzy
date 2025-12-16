@@ -1,8 +1,15 @@
 <% @page_title = "Import CSV - #{@site.name}" %>
 
-<div class="panel panel--centered">
+<% content_for :header do %>
+  <div class="header__actions header__actions--start">
+    <%= back_link_to "CSV Imports", csv_imports_path, "keydown.left@document->hotkey#click keydown.esc@document->hotkey#click" %>
+  </div>
+
+  <h1 class="header__title divider divider--fade full-width"><%= @page_title %></h1>
+<% end %>
+
+<section class="panel shadow center margin-block-start-half">
   <%= form_with model: @csv_import, url: site_csv_imports_path(@site), class: "flex flex-column gap" do |form| %>
-    <h1 class="txt-x-large margin-none font-weight-black"><%= @page_title %></h1>
 
     <% if @csv_import.errors.any? %>
       <div class="flash flash--error">
@@ -23,15 +30,21 @@
       </small>
     </div>
 
-    <div class="flash flash--info margin-block-start">
-      <strong>Required columns:</strong> site_code, cycle_barcode, catalog_barcode, received_at, sterilized_at, status
-      <br>
-      <strong>Optional columns:</strong> washed_at, packed_at, delivered_at, nonconform_kind, nonconform_notes
+    <div class="txt-small txt-subtle margin-block-start">
+      <div class="margin-block-end-small">
+        <strong>Required columns:</strong> site_code, cycle_barcode, catalog_barcode, received_at, sterilized_at, status
+      </div>
+      <div>
+        <strong>Optional columns:</strong> washed_at, packed_at, delivered_at, nonconform_kind, nonconform_notes
+      </div>
     </div>
 
     <div class="flex gap margin-block-start">
-      <%= form.submit "Upload and Process", class: "btn btn--primary" %>
-      <%= link_to "Cancel", csv_imports_path, class: "btn" %>
+      <button type="submit" class="btn btn--link center">
+        <span>Upload and Process</span>
+        <%= icon_tag "arrow-right" %>
+      </button>
+      <%= link_to "Cancel", csv_imports_path, class: "btn", data: { turbo_frame: "_top" } %>
     </div>
   <% end %>
-</div>
+</section>

@@ -1,11 +1,17 @@
 <% @page_title = "Compute Invoice" %>
 
-<div class="panel panel--centered">
-  <h1 class="txt-x-large margin-none font-weight-black margin-block-end"><%= @page_title %></h1>
+<% content_for :header do %>
+  <div class="header__actions header__actions--start">
+    <%= back_link_to "Invoice Periods", contract_invoice_periods_path(@contract), "keydown.left@document->hotkey#click keydown.esc@document->hotkey#click" %>
+  </div>
 
+  <h1 class="header__title divider divider--fade full-width"><%= @page_title %></h1>
+<% end %>
+
+<section class="panel shadow center margin-block-start-half">
   <div class="panel panel--inset margin-block-end">
     <h2 class="txt-large margin-none margin-block-end-small">Contract: <%= @contract.name %></h2>
-    <p class="txt-muted margin-none">
+    <p class="txt-subtle margin-none">
       Site: <%= @contract.site&.name || "All Sites" %><br>
       Price per set: <%= number_to_currency(@contract.price_per_set_cents / 100.0) %><br>
       Exclude nonconform: <%= @contract.exclude_nonconform? ? "Yes" : "No" %><br>
@@ -43,13 +49,16 @@
       </div>
     </div>
 
-    <p class="txt-small txt-muted">
+    <p class="txt-small txt-subtle">
       The invoice will be computed based on reprocessing cycles with <strong>sterilized_at</strong> timestamps in the selected month.
     </p>
 
-    <div class="flex gap">
-      <%= form.submit "Compute Invoice", class: "btn btn--primary" %>
-      <%= link_to "Cancel", contract_invoice_periods_path(@contract), class: "btn" %>
+    <div class="flex gap margin-block-start">
+      <button type="submit" class="btn btn--link center">
+        <span>Compute Invoice</span>
+        <%= icon_tag "arrow-right" %>
+      </button>
+      <%= link_to "Cancel", contract_invoice_periods_path(@contract), class: "btn", data: { turbo_frame: "_top" } %>
     </div>
   <% end %>
-</div>
+</section>

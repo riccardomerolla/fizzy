@@ -1,11 +1,19 @@
 <% @page_title = "Contracts" %>
 
-<div class="panel panel--centered">
-  <div class="flex gap justify-between align-center margin-block-end">
-    <h1 class="txt-x-large margin-none font-weight-black"><%= @page_title %></h1>
-    <%= link_to "New Contract", new_contract_path, class: "btn btn--primary" %>
-  </div>
+<% content_for :header do %>
+  <h1 class="header__title divider divider--fade full-width">
+    <span class="overflow-ellipsis"><%= @page_title %></span>
+  </h1>
 
+  <div class="header__actions header__actions--end">
+    <%= link_to new_contract_path, class: "btn btn--circle" do %>
+      <%= icon_tag "add" %>
+      <span class="for-screen-reader">New Contract</span>
+    <% end %>
+  </div>
+<% end %>
+
+<section class="panel shadow center margin-block-start-half">
   <% if @contracts.any? %>
     <table class="full-width margin-block-start">
       <thead>
@@ -38,7 +46,10 @@
   <% else %>
     <div class="blank-slate margin-block-start-large">
       <p class="txt-large">No contracts yet. Create a contract to configure pricing and SLA rules.</p>
-      <%= link_to "Create Contract", new_contract_path, class: "btn btn--primary margin-block-start" %>
+      <%= link_to new_contract_path, class: "btn btn--link center margin-block-start" do %>
+        <%= icon_tag "add" %>
+        <span>Create Contract</span>
+      <% end %>
     </div>
   <% end %>
-</div>
+</section>

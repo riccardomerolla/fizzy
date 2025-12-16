@@ -6,11 +6,10 @@ class CsvImportsController < ApplicationController
     @csv_imports = Current.account.csv_imports
       .includes(:site)
       .reverse_chronologically
-      .page(params[:page])
   end
 
   def show
-    @errors = @csv_import.errors.chronologically.page(params[:page])
+    @errors = @csv_import.import_errors.chronologically
   end
 
   def new

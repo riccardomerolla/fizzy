@@ -1,8 +1,15 @@
 <% @page_title = "Edit Site" %>
 
-<div class="panel panel--centered">
+<% content_for :header do %>
+  <div class="header__actions header__actions--start">
+    <%= back_link_to "Sites", sites_path, "keydown.left@document->hotkey#click keydown.esc@document->hotkey#click" %>
+  </div>
+
+  <h1 class="header__title"><%= @page_title %></h1>
+<% end %>
+
+<section class="panel shadow center margin-block-start-half">
   <%= form_with model: @site, class: "flex flex-column gap" do |form| %>
-    <h1 class="txt-x-large margin-none font-weight-black"><%= @page_title %></h1>
 
     <% if @site.errors.any? %>
       <div class="flash flash--error">
@@ -31,8 +38,11 @@
     </div>
 
     <div class="flex gap margin-block-start">
-      <%= form.submit "Update Site", class: "btn btn--primary" %>
-      <%= link_to "Cancel", sites_path, class: "btn" %>
+      <button type="submit" class="btn btn--link center">
+        <span>Update Site</span>
+        <%= icon_tag "arrow-right" %>
+      </button>
+      <%= link_to "Cancel", sites_path, class: "btn", data: { turbo_frame: "_top" } %>
     </div>
   <% end %>
-</div>
+</section>
