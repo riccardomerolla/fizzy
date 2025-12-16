@@ -10,6 +10,15 @@ class Account < ApplicationRecord
   has_many :columns, dependent: :destroy
   has_many :exports, class_name: "Account::Export", dependent: :destroy
 
+  # CSSD domain associations
+  has_many :sites, dependent: :destroy
+  has_many :set_catalogs, dependent: :destroy
+  has_many :reprocessing_cycles, dependent: :destroy
+  has_many :non_conformities, dependent: :destroy
+  has_many :contracts, dependent: :destroy
+  has_many :invoice_periods, dependent: :destroy
+  has_many :csv_imports, dependent: :destroy
+
   before_create :assign_external_account_id
   after_create :create_join_code
 

@@ -1,0 +1,65 @@
+<% @page_title = "Invoice Periods - #{@contract.name}" %>
+
+<% content_for :header do %>
+  <div class="header__actions header__actions--start">
+    <%= back_link_to "Contracts", contracts_path, "keydown.left@document->hotkey#click keydown.esc@document->hotkey#click" %>
+  </div>
+
+  <h1 class="header__title divider divider--fade full-width">
+    <div class="txt-normal font-weight-normal">
+      <%= @page_title %> • 
+      Site: <%= @contract.site&.name || "All Sites" %> • 
+      Price: <%= number_to_currency(@contract.price_per_set_cents / 100.0) %>/set
+    </div>
+  </h1>
+
+  <div class="header__actions header__actions--end">
+    <%= link_to new_contract_invoice_period_path(@contract), class: "btn btn--circle" do %>
+      <%= icon_tag "add" %>
+      <span class="for-screen-reader">Compute New Invoice</span>
+    <% end %>
+  </div>
+<% end %>
+
+<section class="panel shadow center margin-block-start-half">
+  <% if @invoice_periods.any? %>
+    <table class="full-width margin-block-start">
+      <thead>
+        <tr>
+          <th>Period</th>
+          <th>Processed</th>
+          <th>Nonconform</th>
+          <th>Billable</th>
+          <th>SLA Breaches</th>
+          <th>Total</th>
+          <th>Computed</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @invoice_periods.each do |period| %>
+          <tr>
+            <td><strong><%= Date.new(period.year, period.month, 1).strftime("%B %Y") %></strong></td>
+            <td><%= period.processed_count %></td>
+            <td><%= period.nonconform_count %></td>
+            <td><%= period.billable_count %></td>
+            <td><%= period.sla_breach_count %></td>
+            <td><strong><%= number_to_currency(period.total_cents / 100.0) %></strong></td>
+            <td class="txt-small txt-subtle"><%= period.computed_at ? time_tag(period.computed_at, format: :short) : "—" %></td>
+            <td class="flex gap">
+              <%= link_to "View", invoice_period_path(period), class: "btn btn--small" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <div class="blank-slate margin-block-start-large">
+      <p class="txt-large">No invoices computed yet. Compute your first invoice for this contract.</p>
+      <%= link_to new_contract_invoice_period_path(@contract), class: "btn btn--link center margin-block-start" do %>
+        <%= icon_tag "add" %>
+        <span>Compute Invoice</span>
+      <% end %>
+    </div>
+  <% end %>
+</section>

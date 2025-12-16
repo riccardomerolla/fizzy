@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2025_12_10_054934) do
+ActiveRecord::Schema[8.2].define(version: 2025_12_15_150700) do
   create_table "accesses", id: :uuid, force: :cascade do |t|
     t.datetime "accessed_at"
     t.uuid "account_id", null: false
@@ -259,11 +259,52 @@ ActiveRecord::Schema[8.2].define(version: 2025_12_10_054934) do
     t.index ["card_id"], name: "index_comments_on_card_id"
   end
 
+  create_table "contracts", id: :uuid, force: :cascade do |t|
+    t.uuid "account_id", null: false
+    t.datetime "created_at", null: false
+    t.boolean "exclude_nonconform", default: true, null: false
+    t.string "name", limit: 255, null: false
+    t.integer "penalty_per_breach_cents"
+    t.integer "price_per_set_cents", default: 0, null: false
+    t.uuid "site_id"
+    t.integer "sla_turnaround_hours"
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "site_id"], name: "index_contracts_on_account_site"
+    t.index ["account_id"], name: "index_contracts_on_account_id"
+    t.index ["site_id"], name: "index_contracts_on_site_id"
+  end
+
   create_table "creators_filters", id: false, force: :cascade do |t|
     t.uuid "creator_id", null: false
     t.uuid "filter_id", null: false
     t.index ["creator_id"], name: "index_creators_filters_on_creator_id"
     t.index ["filter_id"], name: "index_creators_filters_on_filter_id"
+  end
+
+  create_table "csv_import_errors", id: :uuid, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.uuid "csv_import_id", null: false
+    t.text "message", limit: 65535, null: false
+    t.json "raw_row"
+    t.integer "row_number", null: false
+    t.datetime "updated_at", null: false
+    t.index ["csv_import_id"], name: "index_csv_import_errors_on_csv_import_id"
+  end
+
+  create_table "csv_imports", id: :uuid, force: :cascade do |t|
+    t.uuid "account_id", null: false
+    t.datetime "created_at", null: false
+    t.text "error_message", limit: 65535
+    t.string "original_filename", limit: 255
+    t.integer "processed_count", default: 0
+    t.integer "rejected_count", default: 0
+    t.integer "row_count", default: 0
+    t.uuid "site_id", null: false
+    t.string "status", limit: 255, default: "pending", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "status"], name: "index_csv_imports_on_account_status"
+    t.index ["account_id"], name: "index_csv_imports_on_account_id"
+    t.index ["site_id"], name: "index_csv_imports_on_site_id"
   end
 
   create_table "entropies", id: :uuid, force: :cascade do |t|
@@ -331,6 +372,26 @@ ActiveRecord::Schema[8.2].define(version: 2025_12_10_054934) do
     t.index ["identity_id"], name: "index_access_token_on_identity_id"
   end
 
+  create_table "invoice_periods", id: :uuid, force: :cascade do |t|
+    t.uuid "account_id", null: false
+    t.integer "billable_count", default: 0
+    t.datetime "computed_at"
+    t.uuid "contract_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "month", null: false
+    t.integer "nonconform_count", default: 0
+    t.integer "penalties_cents", default: 0
+    t.integer "processed_count", default: 0
+    t.integer "sla_breach_count", default: 0
+    t.integer "subtotal_cents", default: 0
+    t.integer "total_cents", default: 0
+    t.datetime "updated_at", null: false
+    t.integer "year", null: false
+    t.index ["account_id", "contract_id", "year", "month"], name: "index_invoice_periods_unique", unique: true
+    t.index ["account_id"], name: "index_invoice_periods_on_account_id"
+    t.index ["contract_id"], name: "index_invoice_periods_on_contract_id"
+  end
+
   create_table "magic_links", id: :uuid, force: :cascade do |t|
     t.string "code", limit: 255, null: false
     t.datetime "created_at", null: false
@@ -355,6 +416,20 @@ ActiveRecord::Schema[8.2].define(version: 2025_12_10_054934) do
     t.index ["mentionee_id"], name: "index_mentions_on_mentionee_id"
     t.index ["mentioner_id"], name: "index_mentions_on_mentioner_id"
     t.index ["source_type", "source_id"], name: "index_mentions_on_source"
+  end
+
+  create_table "non_conformities", id: :uuid, force: :cascade do |t|
+    t.uuid "account_id", null: false
+    t.datetime "created_at", null: false
+    t.string "kind", limit: 255, null: false
+    t.text "notes", limit: 65535
+    t.datetime "occurred_at", null: false
+    t.uuid "reprocessing_cycle_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "kind"], name: "index_non_conformities_on_account_kind"
+    t.index ["account_id", "occurred_at"], name: "index_non_conformities_on_account_occurred"
+    t.index ["account_id"], name: "index_non_conformities_on_account_id"
+    t.index ["reprocessing_cycle_id"], name: "index_non_conformities_on_reprocessing_cycle_id"
   end
 
   create_table "notification_bundles", id: :uuid, force: :cascade do |t|
@@ -424,6 +499,28 @@ ActiveRecord::Schema[8.2].define(version: 2025_12_10_054934) do
     t.index ["reacter_id"], name: "index_reactions_on_reacter_id"
   end
 
+  create_table "reprocessing_cycles", id: :uuid, force: :cascade do |t|
+    t.uuid "account_id", null: false
+    t.datetime "created_at", null: false
+    t.string "cycle_barcode", limit: 255, null: false
+    t.datetime "delivered_at"
+    t.datetime "packed_at"
+    t.datetime "received_at", null: false
+    t.uuid "set_catalog_id", null: false
+    t.uuid "site_id", null: false
+    t.string "source", limit: 255, default: "csv_upload", null: false
+    t.string "status", limit: 255, default: "conform", null: false
+    t.datetime "sterilized_at"
+    t.datetime "updated_at", null: false
+    t.datetime "washed_at"
+    t.index ["account_id", "site_id", "cycle_barcode"], name: "index_cycles_on_account_site_barcode", unique: true
+    t.index ["account_id", "site_id", "received_at"], name: "index_cycles_on_account_site_received"
+    t.index ["account_id", "status"], name: "index_cycles_on_account_status"
+    t.index ["account_id"], name: "index_reprocessing_cycles_on_account_id"
+    t.index ["set_catalog_id"], name: "index_reprocessing_cycles_on_set_catalog_id"
+    t.index ["site_id"], name: "index_reprocessing_cycles_on_site_id"
+  end
+
   create_table "search_queries", id: :uuid, force: :cascade do |t|
     t.uuid "account_id", null: false
     t.datetime "created_at", null: false
@@ -458,6 +555,28 @@ ActiveRecord::Schema[8.2].define(version: 2025_12_10_054934) do
     t.index ["identity_id"], name: "index_sessions_on_identity_id"
   end
 
+  create_table "set_catalogs", id: :uuid, force: :cascade do |t|
+    t.uuid "account_id", null: false
+    t.string "catalog_barcode", limit: 255, null: false
+    t.datetime "created_at", null: false
+    t.string "family", limit: 255
+    t.string "name", limit: 255, null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "catalog_barcode"], name: "index_set_catalogs_on_account_id_and_catalog_barcode", unique: true
+    t.index ["account_id"], name: "index_set_catalogs_on_account_id"
+  end
+
+  create_table "sites", id: :uuid, force: :cascade do |t|
+    t.uuid "account_id", null: false
+    t.string "code", limit: 255, null: false
+    t.datetime "created_at", null: false
+    t.string "name", limit: 255, null: false
+    t.string "timezone", limit: 255, default: "Europe/Rome", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "code"], name: "index_sites_on_account_id_and_code", unique: true
+    t.index ["account_id"], name: "index_sites_on_account_id"
+  end
+
   create_table "steps", id: :uuid, force: :cascade do |t|
     t.uuid "account_id", null: false
     t.uuid "card_id", null: false
@@ -479,7 +598,7 @@ ActiveRecord::Schema[8.2].define(version: 2025_12_10_054934) do
     t.string "operation", limit: 255, null: false
     t.uuid "recordable_id"
     t.string "recordable_type", limit: 255
-    t.string "request_id"
+    t.string "request_id", limit: 255
     t.uuid "user_id"
     t.index ["account_id"], name: "index_storage_entries_on_account_id"
     t.index ["blob_id"], name: "index_storage_entries_on_blob_id"

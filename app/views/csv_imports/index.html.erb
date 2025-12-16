@@ -1,0 +1,61 @@
+<% @page_title = "CSV Imports" %>
+
+<% content_for :header do %>
+  <h1 class="header__title divider divider--fade full-width"><%= @page_title %></h1>
+
+  <div class="header__actions header__actions--end">
+    <%= link_to sites_path, class: "btn btn--circle" do %>
+      <%= icon_tag "add" %>
+      <span class="for-screen-reader">Import New CSV</span>
+    <% end %>
+  </div>
+<% end %>
+
+<section class="panel shadow center margin-block-start-half">
+  <% if @csv_imports.any? %>
+    <table class="full-width margin-block-start">
+      <thead>
+        <tr>
+          <th>Site</th>
+          <th>Filename</th>
+          <th>Status</th>
+          <th>Rows</th>
+          <th>Processed</th>
+          <th>Rejected</th>
+          <th>Success Rate</th>
+          <th>Created</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @csv_imports.each do |import| %>
+          <tr>
+            <td><%= import.site.name %></td>
+            <td><code><%= import.original_filename %></code></td>
+            <td>
+              <span class="badge badge--<%= import.status %>">
+                <%= import.status.titleize %>
+              </span>
+            </td>
+            <td><%= import.row_count %></td>
+            <td><%= import.processed_count %></td>
+            <td><%= import.rejected_count %></td>
+            <td><%= number_to_percentage(import.success_rate, precision: 1) %></td>
+            <td><%= time_tag import.created_at, format: :short %></td>
+            <td>
+              <%= link_to "Details", csv_import_path(import), class: "btn btn--small" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <div class="blank-slate margin-block-start-large">
+      <p class="txt-large">No CSV imports yet.</p>
+      <%= link_to sites_path, class: "btn btn--link center margin-block-start" do %>
+        <%= icon_tag "add" %>
+        <span>Import CSV</span>
+      <% end %>
+    </div>
+  <% end %>
+</section>

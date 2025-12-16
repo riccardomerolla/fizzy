@@ -1,0 +1,100 @@
+<section class="mobile-card-columns">
+  <div class="cards cards--considering is-collapsed">
+    <div class="cards__expander btn btn--plain">
+      <span class="cards__expander-count"></span>
+      <h2 class="cards__expander-title">KPIs</h2>
+    </div>
+    <div class="cards__body">
+      <div class="grid grid--2-columns gap">
+        <article class="card">
+          <h3>Volume</h3>
+          <div><%= number_with_delimiter(@kpis[:volume][:total]) %></div>
+          <div>
+            <span class="txt-green"><%= @kpis[:volume][:conform] %> conform</span> • 
+            <span class="txt-red"><%= @kpis[:volume][:nonconform] %> nonconform</span>
+          </div>
+        </article>
+        <article class="card">
+          <h3>Quality</h3>
+          <div>
+            <%= number_to_percentage(@kpis[:quality][:nonconform_percentage], precision: 1) %>
+          </div>
+          <div>
+            <%= @kpis[:quality][:nonconform_count] %> non-conforming cycles
+          </div>
+        </article>
+        <article class="card">
+          <h3>Turnaround</h3>
+          <div>
+            <%= number_with_precision(@kpis[:turnaround][:median_hours], precision: 1) %>h
+          </div>
+          <div>
+            Median • P90: <%= number_with_precision(@kpis[:turnaround][:p90_hours], precision: 1) %>h
+          </div>
+        </article>
+        <article class="card">
+          <h3>SLA Breaches</h3>
+          <% if @kpis[:sla][:sla_hours].present? %>
+            <div>
+              <%= @kpis[:sla][:breach_count] %>
+            </div>
+            <div>
+              <%= number_to_percentage(@kpis[:sla][:breach_percentage], precision: 1) %> breach rate<br>
+              (SLA: <%= @kpis[:sla][:sla_hours] %>h)
+            </div>
+          <% else %>
+            <div>No SLA defined</div>
+            <div>Configure in Contracts</div>
+          <% end %>
+        </article>
+      </div>
+    </div>
+  </div>
+
+  <div class="cards cards--doing is-collapsed">
+    <div class="cards__expander btn btn--plain">
+      <span class="cards__expander-count"></span>
+      <h2 class="cards__expander-title">Non-Conformity Breakdown</h2>
+    </div>
+    <div class="cards__body">
+      <% if @non_conformity_breakdown[:total] > 0 %>
+        <table class="full-width">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Count</th>
+              <th>Percentage</th>
+              <th>Visual</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @pareto_data.each do |kind, data| %>
+              <tr>
+                <td><%= kind.titleize %></td>
+                <td><%= data[:count] %></td>
+                <td><%= number_to_percentage(data[:percentage], precision: 1) %></td>
+                <td>
+                  <%= content_tag :div, "", style: "background: #e74c3c; height: 20px; width: #{data[:percentage]}%; max-width: 100%;" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% else %>
+        <p class="txt-muted">No non-conformities in selected period</p>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="cards cards--closed is-collapsed" style="--card-color: var(--color-card-complete);">
+    <div class="cards__expander btn btn--plain">
+      <span class="cards__expander-count"></span>
+      <h2 class="cards__expander-title">Quick Links</h2>
+    </div>
+    <div class="cards__body flex gap">
+      <%= link_to "View All Cycles", reprocessing_cycles_path(site_id: @selected_site&.id, start_date: @start_date.to_date, end_date: @end_date.to_date), class: "btn btn--primary" %>
+      <%= link_to "Import CSV", sites_path, class: "btn" %>
+      <%= link_to "Manage Sites", sites_path, class: "btn" %>
+    </div>
+  </div>
+</section>

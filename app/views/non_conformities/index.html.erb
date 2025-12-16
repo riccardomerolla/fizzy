@@ -1,0 +1,115 @@
+<% @page_title = "Non-Conformities" %>
+
+<div class="panel panel--wide">
+  <h1 class="txt-x-large margin-none font-weight-black margin-block-end"><%= @page_title %></h1>
+
+  <!-- Filters -->
+  <div class="margin-block-end-large">
+    <%= form_with url: non_conformities_path, method: :get, class: "flex gap align-end flex-wrap" do |form| %>
+      <div class="flex flex-column gap-small">
+        <%= form.label :site_id, "Site" %>
+        <%= form.select :site_id, 
+            options_for_select([["All Sites", ""]] + Current.account.sites.pluck(:name, :id), params[:site_id]),
+            {}, class: "input" %>
+      </div>
+
+      <div class="flex flex-column gap-small">
+        <%= form.label :kind, "Type" %>
+        <%= form.select :kind,
+            options_for_select([["All Types", ""]] + NonConformity::KINDS.map { |k| [k.titleize, k] }, params[:kind]),
+            {}, class: "input" %>
+      </div>
+
+      <div class="flex flex-column gap-small">
+        <%= form.label :start_date, "Start Date" %>
+        <%= form.date_field :start_date, value: params[:start_date], class: "input" %>
+      </div>
+
+      <div class="flex flex-column gap-small">
+        <%= form.label :end_date, "End Date" %>
+        <%= form.date_field :end_date, value: params[:end_date], class: "input" %>
+      </div>
+
+      <div class="flex gap">
+        <%= form.submit "Apply Filters", class: "btn btn--primary" %>
+        <%= link_to "Clear", non_conformities_path, class: "btn" %>
+        <%= link_to "Export CSV", non_conformities_path(format: :csv, **params.permit(:site_id, :kind, :start_date, :end_date)), class: "btn" %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Pareto Summary -->
+  <% if @pareto_summary.any? %>
+    <div class="panel panel--inset margin-block-end-large">
+      <h2 class="txt-x-large margin-none margin-block-end">Non-Conformity Breakdown (Pareto)</h2>
+      <table class="full-width">
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Count</th>
+            <th>Visual</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% total = @pareto_summary.sum { |_k, v| v } %>
+          <% @pareto_summary.take(10).each do |kind, count| %>
+            <% percentage = (count.to_f / total * 100).round(1) %>
+            <tr>
+              <td><strong><%= kind.titleize %></strong></td>
+              <td><%= count %> (<%= number_to_percentage(percentage, precision: 1) %>)</td>
+              <td>
+                <div style="background: #e74c3c; height: 20px; width: <%= percentage %>%; max-width: 100%;"></div>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+
+  <!-- Non-Conformities List -->
+  <% if @non_conformities.any? %>
+    <table class="full-width margin-block-start">
+      <thead>
+        <tr>
+          <th>Occurred At</th>
+          <th>Type</th>
+          <th>Site</th>
+          <th>Cycle Barcode</th>
+          <th>Set Catalog</th>
+          <th>Notes</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @non_conformities.each do |nc| %>
+          <% cycle = nc.reprocessing_cycle %>
+          <tr>
+            <td class="txt-small"><%= time_tag(nc.occurred_at, format: :short) %></td>
+            <td>
+              <span class="label label--danger"><%= nc.kind.titleize %></span>
+            </td>
+            <td><%= cycle.site.name %></td>
+            <td><code><%= cycle.cycle_barcode %></code></td>
+            <td><%= cycle.set_catalog.name %></td>
+            <td class="txt-small"><%= nc.notes.present? ? truncate(nc.notes, length: 50) : "—" %></td>
+            <td>
+              <% if cycle.status == "conform" %>
+                <span class="label label--success">Conform</span>
+              <% else %>
+                <span class="label label--danger">Nonconform</span>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <!-- Pagination handled via .page() method on controller side -->
+  <% else %>
+    <div class="blank-slate margin-block-start-large">
+      <p class="txt-large">No non-conformities found matching your filters.</p>
+      <%= link_to "Clear Filters", non_conformities_path, class: "btn margin-block-start" %>
+    </div>
+  <% end %>
+</div>

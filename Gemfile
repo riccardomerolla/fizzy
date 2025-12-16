@@ -23,6 +23,7 @@ gem "trilogy", "~> 2.9"
 
 # Features
 gem "bcrypt", "~> 3.1.7"
+gem "csv"
 gem "geared_pagination", "~> 1.2"
 gem "rqrcode"
 gem "redcarpet"

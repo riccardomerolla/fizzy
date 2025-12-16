@@ -1,0 +1,48 @@
+<% @page_title = "New Site" %>
+
+<% content_for :header do %>
+  <div class="header__actions header__actions--start">
+    <%= back_link_to "Sites", sites_path, "keydown.left@document->hotkey#click keydown.esc@document->hotkey#click" %>
+  </div>
+
+  <h1 class="header__title"><%= @page_title %></h1>
+<% end %>
+
+<section class="panel shadow center margin-block-start-half">
+  <%= form_with model: @site, class: "flex flex-column gap" do |form| %>
+
+    <% if @site.errors.any? %>
+      <div class="flash flash--error">
+        <ul>
+          <% @site.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="flex flex-column gap-small">
+      <%= form.label :name, "Site Name" %>
+      <%= form.text_field :name, required: true, class: "input full-width", autofocus: true, placeholder: "e.g., Main Hospital CSSD" %>
+    </div>
+
+    <div class="flex flex-column gap-small">
+      <%= form.label :code, "Site Code" %>
+      <%= form.text_field :code, required: true, class: "input full-width", placeholder: "e.g., MH01" %>
+      <small class="txt-small">Short identifier used in CSV imports</small>
+    </div>
+
+    <div class="flex flex-column gap-small">
+      <%= form.label :timezone, "Timezone" %>
+      <%= form.select :timezone, ActiveSupport::TimeZone.all.map { |tz| [tz.name, tz.name] }, {}, class: "input full-width" %>
+    </div>
+
+    <div class="flex gap margin-block-start">
+      <button type="submit" class="btn btn--link center">
+        <span>Create Site</span>
+        <%= icon_tag "arrow-right" %>
+      </button>
+      <%= link_to "Cancel", sites_path, class: "btn", data: { turbo_frame: "_top" } %>
+    </div>
+  <% end %>
+</section>

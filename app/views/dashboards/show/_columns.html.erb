@@ -1,0 +1,144 @@
+<%= tag.div class: "card-columns hide-scrollbar", data: {
+      controller: "collapsible-columns navigable-list",
+      collapsible_columns_collapsed_class: "is-collapsed",
+      collapsible_columns_no_transitions_class: "no-transitions",
+      collapsible_columns_title_not_visible_class: "is-off-screen",
+      navigable_list_supports_vertical_navigation_value: false,
+      navigable_list_has_nested_navigation_value: true,
+      navigable_list_prevent_handled_keys_value: true,
+      navigable_list_auto_select_value: false,
+      navigable_list_auto_scroll_value: false,
+      action: "
+        keydown->navigable-list#navigate
+        click@document->navigable-list#deselectWhenClickingOutside" } do %>
+  <div class="card-columns__left"></div>
+
+  <%= column_tag id: "dashboard_kpis", name: "KPIs", drop_url: "#", collapsed: false,
+      class: "cards--considering",
+      data: {
+        collapsible_columns_target: "column",
+        action: "focus->collapsible-columns#focusOnColumn"
+      } do %>
+    <header class="cards__header">
+      <%= render "boards/show/expander", title: "KPIs", count: 4, column_id: "dashboard_kpis" %>
+    </header>
+    <div class="cards__body">
+      <div class="cards grid grid--4-columns gap">
+        <article class="card">
+          <h3>Volume</h3>
+          <div><%= number_with_delimiter(@kpis[:volume][:total]) %></div>
+          <div>
+            <span class="txt-green"><%= @kpis[:volume][:conform] %> conform</span> •
+            <span class="txt-red"><%= @kpis[:volume][:nonconform] %> nonconform</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Quality</h3>
+          <div>
+            <%= number_to_percentage(@kpis[:quality][:nonconform_percentage], precision: 1) %>
+          </div>
+          <div>
+            <%= @kpis[:quality][:nonconform_count] %> non-conforming cycles
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Turnaround</h3>
+          <div>
+            <%= number_with_precision(@kpis[:turnaround][:median_hours], precision: 1) %>h
+          </div>
+          <div>
+            Median • P90: <%= number_with_precision(@kpis[:turnaround][:p90_hours], precision: 1) %>h
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>SLA Breaches</h3>
+          <% if @kpis[:sla][:sla_hours].present? %>
+            <div>
+              <%= @kpis[:sla][:breach_count] %>
+            </div>
+            <div>
+              <%= number_to_percentage(@kpis[:sla][:breach_percentage], precision: 1) %> breach rate<br>
+              (SLA: <%= @kpis[:sla][:sla_hours] %>h)
+            </div>
+          <% else %>
+            <div>No SLA defined</div>
+            <div>Configure in Contracts</div>
+          <% end %>
+        </article>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="card-columns__right">
+    <%= column_tag id: "dashboard_non_conformity", name: "Non-Conformity Breakdown", drop_url: "#", collapsed: false,
+        class: "cards--doing",
+        data: {
+          collapsible_columns_target: "column",
+          action: "focus->collapsible-columns#focusOnColumn"
+        } do %>
+      <header class="cards__header">
+        <%= render "boards/show/expander", title: "Non-Conformity Breakdown", count: @pareto_data.size, column_id: "dashboard_non_conformity" %>
+      </header>
+      <div class="cards__body">
+        <% if @non_conformity_breakdown[:total] > 0 %>
+          <table class="full-width">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Count</th>
+                <th>Percentage</th>
+                <th>Visual</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @pareto_data.each do |kind, data| %>
+                <tr>
+                  <td><%= kind.titleize %></td>
+                  <td><%= data[:count] %></td>
+                  <td><%= number_to_percentage(data[:percentage], precision: 1) %></td>
+                  <td>
+                    <%= content_tag :div, "", style: "background: #e74c3c; height: 20px; width: #{data[:percentage]}%; max-width: 100%;" %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        <% else %>
+          <p class="txt-muted">No non-conformities in selected period</p>
+        <% end %>
+      </div>
+    <% end %>
+
+    <%= column_tag id: "dashboard_quick_links", name: "Quick Links", drop_url: "#", collapsed: false,
+        class: "cards--closed",
+        style: "--card-color: var(--color-card-complete);",
+        data: {
+          collapsible_columns_target: "column",
+          action: "focus->collapsible-columns#focusOnColumn"
+        } do %>
+      <header class="cards__header">
+        <%= render "boards/show/expander", title: "Quick Links", count: 3, column_id: "dashboard_quick_links" %>
+      </header>
+      <div class="cards__body">
+        <div class="board-tools card">
+          <%= link_to reprocessing_cycles_path(site_id: @selected_site&.id, start_date: @start_date.to_date, end_date: @end_date.to_date), class: "btn btn--link", data: { turbo_frame: "_top" } do %>
+            <span>View All Cycles</span>
+          <% end %>
+        </div>
+        <div class="board-tools card">
+          <%= link_to sites_path, class: "btn btn--link", data: { turbo_frame: "_top" } do %>
+            <span>Import CSV</span>
+          <% end %>
+        </div>
+        <div class="board-tools card">
+          <%= link_to sites_path, class: "btn btn--link", data: { turbo_frame: "_top" } do %>
+            <span>Manage Sites</span>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>

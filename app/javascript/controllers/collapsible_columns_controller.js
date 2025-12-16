@@ -74,11 +74,13 @@ export default class extends Controller {
   }
 
   #collapseAllExcept(clickedColumn) {
-    this.columnTargets.forEach(column => {
-      if (column !== clickedColumn) {
-        this.#collapse(column)
-      }
-    })
+    const expandedColumns = this.columnTargets.filter(column => !this.#isCollapsed(column))
+    const maxOpenColumns = 2
+
+    if (expandedColumns.length >= maxOpenColumns && !expandedColumns.includes(clickedColumn)) {
+      // Collapse the oldest expanded column (first in the list)
+      this.#collapse(expandedColumns[0])
+    }
   }
 
   #isCollapsed(column) {
