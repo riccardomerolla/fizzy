@@ -1,0 +1,82 @@
+<% @page_title = "Reprocessing Cycles" %>
+<% content_for :header do %>
+  <div class="header__actions header__actions--start">
+    <%= link_to dashboard_path, class: "btn", data: { controller: "tooltip" } do %>
+      <%= icon_tag "home" %>
+      <span class="for-screen-reader">Dashboard</span>
+    <% end %>
+  </div>
+
+  <h1 class="header__title divider divider--fade full-width">
+    <span class="overflow-ellipsis"><%= @page_title %></span>
+  </h1>
+
+  <div class="header__actions header__actions--end">
+    <%= link_to reprocessing_cycles_path(format: :csv, site_id: params[:site_id], status: params[:status], start_date: params[:start_date], end_date: params[:end_date]), class: "btn", data: { controller: "tooltip" } do %>
+      <%= icon_tag "share" %>
+      <span class="for-screen-reader">Export CSV</span>
+    <% end %>
+  </div>
+<% end %>
+
+<%= render "reprocessing_cycles/filters" %>
+
+<% if @cycles.any? %>
+  <table class="full-width margin-block-start">
+    <thead>
+      <tr>
+        <th>Cycle</th>
+        <th>Site</th>
+        <th>Set Catalog</th>
+        <th>Status</th>
+        <th>Received</th>
+        <th>Sterilized</th>
+        <th>Turnaround</th>
+        <th>Non-Conformities</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @cycles.each do |cycle| %>
+        <tr>
+          <td><code><%= cycle.cycle_barcode %></code></td>
+          <td><%= cycle.site.name %></td>
+          <td><%= cycle.set_catalog.name %></td>
+          <td>
+            <% if cycle.conform? %>
+              <span class="badge badge--success">Conform</span>
+            <% else %>
+              <span class="badge badge--danger">Non-Conform</span>
+            <% end %>
+          </td>
+          <td><%= time_tag cycle.received_at, format: :short %></td>
+          <td>
+            <% if cycle.sterilized_at %>
+              <%= time_tag cycle.sterilized_at, format: :short %>
+            <% else %>
+              <span class="txt-muted">—</span>
+            <% end %>
+          </td>
+          <td>
+            <% if cycle.turnaround_hours %>
+              <%= number_with_precision(cycle.turnaround_hours, precision: 1) %>h
+            <% else %>
+              <span class="txt-muted">—</span>
+            <% end %>
+          </td>
+          <td>
+            <% if cycle.non_conformities.any? %>
+              <%= cycle.non_conformities.map(&:kind).map(&:titleize).join(", ") %>
+            <% else %>
+              <span class="txt-muted">—</span>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <div class="blank-slate margin-block-start-large">
+    <p class="txt-large">No reprocessing cycles found.</p>
+    <%= link_to "Import CSV", sites_path, class: "btn btn--primary margin-block-start" %>
+  </div>
+<% end %>

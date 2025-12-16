@@ -1,0 +1,21 @@
+<% @page_title = "CSSD Dashboard" %>
+<% content_for :header do %>
+  <div class="header__actions header__actions--start">
+    <%= link_to_webhooks(Current.account) if defined?(link_to_webhooks) && Current.user&.admin? %>
+  </div>
+
+  <h1 class="header__title divider divider--fade full-width">
+    <span class="overflow-ellipsis"><%= @page_title %></span>
+  </h1>
+
+  <div class="header__actions header__actions--end">
+    <%# Placeholder to mirror boards' end actions; adjust if a dashboard edit page exists %>
+  </div>
+<% end %>
+
+<%= render "dashboards/show/filter_settings", filter_url: dashboard_path, user_filtering: @user_filtering, sites: @sites, selected_site: @selected_site, start_date: @start_date, end_date: @end_date %>
+
+<%= turbo_frame_tag :cards_container do %>
+  <%= render "dashboards/show/columns" %>
+  <%= render "dashboards/show/mobile_columns" %>
+<% end %>

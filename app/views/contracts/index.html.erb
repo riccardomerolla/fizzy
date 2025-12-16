@@ -1,0 +1,55 @@
+<% @page_title = "Contracts" %>
+
+<% content_for :header do %>
+  <h1 class="header__title divider divider--fade full-width">
+    <span class="overflow-ellipsis"><%= @page_title %></span>
+  </h1>
+
+  <div class="header__actions header__actions--end">
+    <%= link_to new_contract_path, class: "btn btn--circle" do %>
+      <%= icon_tag "add" %>
+      <span class="for-screen-reader">New Contract</span>
+    <% end %>
+  </div>
+<% end %>
+
+<section class="panel shadow center margin-block-start-half">
+  <% if @contracts.any? %>
+    <table class="full-width margin-block-start">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Site</th>
+          <th>Price per Set</th>
+          <th>SLA (hours)</th>
+          <th>Exclude Nonconform</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @contracts.each do |contract| %>
+          <tr>
+            <td><strong><%= contract.name %></strong></td>
+            <td><%= contract.site&.name || "Default (All Sites)" %></td>
+            <td><%= number_to_currency(contract.price_per_set_cents / 100.0) %></td>
+            <td><%= contract.sla_turnaround_hours || "—" %></td>
+            <td><%= contract.exclude_nonconform? ? "✓" : "✗" %></td>
+            <td class="flex gap">
+              <%= link_to "Invoices", contract_invoice_periods_path(contract), class: "btn btn--small" %>
+              <%= link_to "Edit", edit_contract_path(contract), class: "btn btn--small" %>
+              <%= button_to "Delete", contract_path(contract), method: :delete, class: "btn btn--small btn--danger", data: { confirm: "Are you sure?" } %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <div class="blank-slate margin-block-start-large">
+      <p class="txt-large">No contracts yet. Create a contract to configure pricing and SLA rules.</p>
+      <%= link_to new_contract_path, class: "btn btn--link center margin-block-start" do %>
+        <%= icon_tag "add" %>
+        <span>Create Contract</span>
+      <% end %>
+    </div>
+  <% end %>
+</section>

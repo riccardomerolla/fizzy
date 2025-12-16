@@ -1,0 +1,49 @@
+<% @page_title = "Sites" %>
+
+<% content_for :header do %>
+  <h1 class="header__title"><%= @page_title %></h1>
+
+  <div class="header__actions header__actions--end">
+    <%= link_to new_site_path, class: "btn btn--circle" do %>
+      <%= icon_tag "add" %>
+      <span class="for-screen-reader">New Site</span>
+    <% end %>
+  </div>
+<% end %>
+
+<section class="panel shadow center margin-block-start-half">
+  <% if @sites.any? %>
+    <table class="full-width margin-block-start">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Code</th>
+          <th>Timezone</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @sites.each do |site| %>
+          <tr>
+            <td><%= site.name %></td>
+            <td><code><%= site.code %></code></td>
+            <td><%= site.timezone %></td>
+            <td class="flex gap">
+              <%= link_to "Import CSV", new_site_csv_import_path(site), class: "btn btn--small" %>
+              <%= link_to "Edit", edit_site_path(site), class: "btn btn--small" %>
+              <%= button_to "Delete", site_path(site), method: :delete, class: "btn btn--small btn--danger", data: { confirm: "Are you sure?" } %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <div class="blank-slate margin-block-start-large">
+      <p class="txt-large">No sites yet. Create your first site to start tracking reprocessing cycles.</p>
+      <%= link_to new_site_path, class: "btn btn--link center margin-block-start" do %>
+        <%= icon_tag "add" %>
+        <span>Create Site</span>
+      <% end %>
+    </div>
+  <% end %>
+</section>

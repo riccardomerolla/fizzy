@@ -8,6 +8,27 @@ Rails.application.routes.draw do
     resources :exports, only: [ :create, :show ]
   end
 
+  # CSSD domain routes
+  resource :dashboard, only: :show
+  
+  resources :sites do
+    resources :csv_imports, only: [ :new, :create ]
+  end
+
+  resources :csv_imports, only: [ :index, :show ]
+  resources :reprocessing_cycles, only: [ :index, :show ]
+  resources :non_conformities, only: [ :index ]
+  
+  resources :contracts do
+    resources :invoice_periods, only: [ :index, :new, :create ]
+  end
+  
+  resources :invoice_periods, only: [ :show ] do
+    member do
+      post :recompute
+    end
+  end
+
   resources :users do
     scope module: :users do
       resource :avatar
