@@ -4,6 +4,15 @@ class NonConformitiesController < ApplicationController
       .includes(reprocessing_cycle: [ :site, :set_catalog ])
       .reverse_chronologically
     
+    # Apply search filter
+    if params[:search].present?
+      search_term = "%#{params[:search]}%"
+      @non_conformities = @non_conformities.left_joins(reprocessing_cycle: [ :site, :set_catalog ]).where(
+        "non_conformities.kind LIKE ? OR non_conformities.notes LIKE ? OR reprocessing_cycles.cycle_barcode LIKE ? OR sites.name LIKE ? OR set_catalogs.name LIKE ?",
+        search_term, search_term, search_term, search_term, search_term
+      )
+    end
+    
     # Apply filters
     if params[:site_id].present?
       cycle_ids = Current.account.reprocessing_cycles.where(site_id: params[:site_id]).pluck(:id)
