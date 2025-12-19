@@ -19,6 +19,7 @@
     <ul class="popup__list" data-filter-target="list">
       <%= render "user", card: @card, user: Current.user, user_label: "Me" do %>
         <span class="visually-hidden"><%= Current.user.name %></span>
+        <kbd class="txt-xx-small hide-on-touch">m</kbd>
       <% end %>
       <%= render collection: @assigned_to, partial: "user", locals: { card: @card } %>
       <% @users.each do |user| %>
