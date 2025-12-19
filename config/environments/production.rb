@@ -21,6 +21,17 @@ Rails.application.configure do
     }
   end
 
+  # Base URL for links in emails and other external references.
+  # Set BASE_URL to your instance's public URL (e.g., https://fizzy.example.com)
+  if base_url = ENV["BASE_URL"].presence
+    uri = URI.parse(base_url)
+    url_options = { host: uri.host, protocol: uri.scheme }
+    url_options[:port] = uri.port if uri.port != uri.default_port
+
+    routes.default_url_options = url_options
+    config.action_mailer.default_url_options = url_options
+  end
+
   # Code is not reloaded between requests.
   config.enable_reloading = false
 

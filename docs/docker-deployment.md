@@ -90,6 +90,15 @@ Less commonly, you might also need to set some of the following:
 
 You can find out more about all these settings in the [Rails Action Mailer documentation](https://guides.rubyonrails.org/action_mailer_basics.html#action-mailer-configuration).
 
+#### Base URL
+
+Fizzy needs to know the public URL of your instance so it can generate correct links in certain situations (like when sending emails).
+Set `BASE_URL` to the full URL where your Fizzy instance is accessible:
+
+```sh
+docker run --environment BASE_URL=https://fizzy.example.com ...
+```
+
 #### VAPID keys
 
 Fizzy can also send Web Push notifications.
@@ -153,6 +162,7 @@ services:
     environment:
       - SECRET_KEY_BASE=abcdefabcdef
       - TLS_DOMAIN=fizzy.example.com
+      - BASE_URL=https://fizzy.example.com
       - MAILER_FROM_ADDRESS=fizzy@example.com
       - SMTP_ADDRESS=mail.example.com
       - SMTP_USERNAME=user
